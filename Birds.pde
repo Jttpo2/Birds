@@ -11,7 +11,9 @@ void setup() {
   background(grey);
 
   birds = new ArrayList<Bird>();
-  Bird bird = new Bird(width/2, height/2);
+  Bird bird = new Bird(width/2, height/2, birds);  
+  birds.add(bird);
+  bird = new Bird(width, height, birds);
   birds.add(bird);
 }
 

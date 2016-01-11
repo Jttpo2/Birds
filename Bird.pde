@@ -1,27 +1,33 @@
 class Bird {
   float xPos;
   float yPos;
-  // float triangleLength;
-  // float triangleWidth;
 
   float velocity;
   float direction; // radians
 
   Triangle triangle;
 
-  public Bird(float x, float y) {
+  List<Bird> otherBirds;
+
+  boolean followMouse = true;
+
+  public Bird(float x, float y, List<Bird> otherBirds) {
     xPos = x;
     yPos = y;
     velocity = 2;
     direction = PI/2;
 
     triangle = new Triangle((int) xPos, (int) yPos, 100, 200, direction);
+    this.otherBirds = otherBirds;
   }
 
   public void update() {
-    // Go towards mouse
-    direction = calculateAngle(xPos, yPos, mouseX, mouseY);
-    println(direction);
+    if (followMouse) {
+      direction = calculateAngle(xPos, yPos, mouseX, mouseY);  
+    } else {
+      Bird closest = findClosest(otherBirds);
+      goTowards(closest);
+    }
     updatePos();
     repositionIfOutside();
     triangle.moveTo((int) xPos, (int) yPos);
@@ -35,7 +41,7 @@ class Bird {
     yPos += deltaY;
   }
 
-  // Angle between points in degrees
+  // Angle between points in radians
   private float calculateAngle(float x1, float y1, float x2, float y2) {
     float deltaX = x2-x1;
     float deltaY = y2-y1;
@@ -72,5 +78,35 @@ class Bird {
 
   public void display() {
     triangle.display();
+  }
+
+  private void goTowards(Bird that) {
+    if (that == null) {
+      println("No bird to fly towards");
+      return;
+    }
+
+    float angleToBird = calculateAngle(this.xPos, this.yPos, that.xPos, that.yPos);
+    println("to bird: " + angleToBird);
+    direction = angleToBird;
+  }
+
+  private float getDistanceTo(Bird that) {
+    float deltaX = that.xPos-this.xPos;
+    float deltaY = that.yPos-this.yPos;
+    return sqrt(pow(deltaX, 2) + pow(deltaY, 2));
+  }
+
+  private Bird findClosest(List<Bird> otherBirds) {
+    float distanceToClosest = Float.MAX_VALUE;
+    Bird closest = null;
+    for (Bird that: otherBirds) {
+      float distance = getDistanceTo(that);
+      if (distance < distanceToClosest) {
+        distanceToClosest = distance;
+        closest = that;
+      }
+    }
+    return closest;
   }
 }
