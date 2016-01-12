@@ -25,7 +25,7 @@ class Bird {
     PVector mousePos = new PVector(mouseX, mouseY);
     aimFor(mousePos);
       
-    // avoidCollision();
+    avoidCollision();
     
     updatePos();
     repositionIfOutside();
@@ -116,7 +116,7 @@ class Bird {
     if (isHeadingFor(that)) {
       float newDirection = atan((FLYING_DISTANCE/2)/getDistanceTo(that));
       
-      // aimFor(newDirection);  
+      aimFor(PVector.fromAngle(newDirection));  
     }
   }
 
