@@ -53,7 +53,6 @@ class Bird {
     // Quadrant wrong direction loop prevention
     int q = getQuadrant(direction);
     println("q: " + q);
-    float rotationAngle = directionDelta;
  
     if (
       q == 1 && directionDelta > PI ||
@@ -63,13 +62,12 @@ class Bird {
      ) {
       // rotationAngle = 2*PI - rotationAngle;
       directionDelta = -directionDelta;
-      rotationAngle = directionDelta;
     } 
 
-    if (rotationAngle >= 0) {
-      rotate(min(rotationAngle, MAX_COURSE_CHANGE));
+    if (directionDelta >= 0) {
+      rotate(min(directionDelta, MAX_COURSE_CHANGE));
     } else {
-      rotate(max(rotationAngle, -MAX_COURSE_CHANGE));
+      rotate(max(directionDelta, -MAX_COURSE_CHANGE));
     }
   }
 

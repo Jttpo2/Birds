@@ -10,7 +10,7 @@ color grey  = color(150, 150, 150);
 void setup() {
   size(800, 600);
   background(grey);
-  frameRate(30);
+  //frameRate(30);
 
   birds = new ArrayList<Bird>();
   Bird bird = new Bird(width/2 - 20, height/2 - 20, birds);  
