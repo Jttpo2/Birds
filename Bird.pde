@@ -47,9 +47,9 @@ class Bird {
     // } 
 
     if (directionDelta >= 0) {
-      direction += min(directionDelta, MAX_COURSE_CHANGE);
+      rotate(min(directionDelta, MAX_COURSE_CHANGE));
     } else {
-      direction += max(directionDelta, -MAX_COURSE_CHANGE);
+      rotate(max(directionDelta, -MAX_COURSE_CHANGE));
     }
 
     // // Handle angle overflow
@@ -76,6 +76,20 @@ class Bird {
     repositionIfOutside();
     triangle.moveTo((int) xPos, (int) yPos);
     triangle.setAngle(direction);
+  }
+
+  private void rotate(float radians) {
+    setDirection(direction + radians);
+  }
+
+  private void setDirection(float angle) {
+    direction = angle;
+    // Overflow handling
+    if (direction > 1.5*PI) {
+      direction = -0.5*PI + (direction % 2*PI);
+    } else if (direction < -0.5*PI) {
+      direction = 1.5*PI - (direction % 2*PI);
+    }
   }
 
   private void updatePos() {
