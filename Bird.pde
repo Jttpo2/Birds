@@ -2,51 +2,29 @@ class Bird {
   private static final float MAX_COURSE_CHANGE = PI/60;
   private static final float FLYING_DISTANCE = 100;
 
-  // float xPos;
-  // float yPos;
   PVector pos;
   PVector vel;
+  PVector acc;
 
-  // float velocity;
-  // float direction; // radians
+  float topSpeed = 4;
 
   Triangle triangle;
 
   List<Bird> otherBirds;
-
-  boolean followMouse = true;
-
-  float maxPi = 0;
-  float minPi = 0;
  
   public Bird(float x, float y, List<Bird> otherBirds) {
     pos = new PVector(x, y);
-    vel = new PVector(1, 1);
-    vel.mult(2);
-    
-    // xPos = x;
-    // yPos = y;
-    // velocity = 2;
-    // direction = PI/2;
+    vel = PVector.fromAngle(3*PI/2);
+    vel.mult(1);
+
     triangle = new Triangle((int) pos.x, (int) pos.y, 20, 40, vel.heading());
     this.otherBirds = otherBirds;
   }
 
-  public void update() {
-    // float desiredDirection;
-    // if (followMouse) {
-      PVector mousePos = new PVector(mouseX, mouseY);
-      aimFor(mousePos);
-      // desiredDirection = calculateAngle(pos.x, pos.y, mouseX, mouseY);  
-      // PVector between = PVector.sub(mousePos, this.pos);
-      // PVector target 
-      // desiredDirection = between.heading();
-    // } else {
-    //   Bird closest = findClosest();
-    //   desiredDirection = getDirectionTo(closest);
-    // }
-    // aimFor(desiredDirection);
-    
+  public void update() {  
+    PVector mousePos = new PVector(mouseX, mouseY);
+    aimFor(mousePos);
+      
     // avoidCollision();
     
     updatePos();
@@ -56,120 +34,21 @@ class Bird {
   }
 
   // Change course as much as possible towards desired direction
-  private void aimFor(PVector target) {
-    PVector between = PVector.sub(target, this.pos);
-    vel = between;
-    vel.mult(0.07);
-    // vel.mult(2);
-    // if (directionDelta >= 0) {
-    //   rotate(min(directionDelta, MAX_COURSE_CHANGE));
-    // } else {
-    //   rotate(max(directionDelta, -MAX_COURSE_CHANGE));
-    // }
-  }
-
-
-  //   float directionDelta = desiredDirection - vel.heading();
+  private void aimFor(PVector targetPos) {
+    PVector toTarget = PVector.sub(targetPos, pos);    
+    toTarget.normalize();
+    toTarget.mult(0.3);
+    acc = toTarget;
+    vel.add(acc);
     
-  //   // Quadrant wrong direction loop prevention
-  //   int q = getQuadrant(vel.heading());
-  //   println("q: " + q);
-  //   println(" current: " + vel.heading()/PI + " Desired: " + desiredDirection/PI + " Delta: " + directionDelta/PI);
-  //   if (
-  //     // q == 1 && directionDelta > PI //||
-  //     // q == 4 && directionDelta < -PI ||
-  //     q == 2 && directionDelta < -PI ||
-  //     q == 3 && directionDelta < PI 
-  //    ) {
-  //     // rotationAngle = 2*PI - rotationAngle;
-  //     directionDelta = -directionDelta;
-  //   } 
+    vel.limit(topSpeed);
 
-  //     // q == 1 && directionDelta > PI //||
-  //     // q == 4 && directionDelta < -PI ||
-  //     // q == 2 && directionDelta > PI ||
-  //     // q == 3 && directionDelta > -PI 
-
-  //   if (directionDelta >= 0) {
-  //     rotate(min(directionDelta, MAX_COURSE_CHANGE));
-  //   } else {
-  //     rotate(max(directionDelta, -MAX_COURSE_CHANGE));
-  //   }
-  // }
-
-  // Helper for extracting quadrant from angle
-  // private int getQuadrant(float angle) {
-  //   // angle = angle % (2*PI);
-
-  //   if (0 <= angle && angle < PI/2 ) {
-  //     return 1;
-  //   } else if (PI/2 <= angle && angle < PI) {
-  //     return 2;
-  //   } else if (-PI <= angle && angle < -PI/2) {
-  //     return 3;
-  //   } else if (-PI/2 <= angle && angle < 0) {
-  //     return 4;
-  //   } else {
-  //     println("Outside standard quadrants");
-  //     return -1;
-  //   }
-  // }
-
-  private void rotate(float radians) {
-    // setDirection(vel.heading() + radians);
-    vel.rotate(radians);
   }
-
-  // Set exact flying direction
-  // private void setDirection(float angle) {
-  //   // Overflow handling
-  //   angle = angle % (2*PI);
-  //   if (angle < 0) {
-  //     angle += 2*PI;
-  //   } 
-  //   direction = angle; 
-  // }
 
   // Update position from course and velocity
   private void updatePos() {
     pos.add(vel);
-
-    // float deltaX = velocity * cos(direction);  // radians(direction));
-    // float deltaY = velocity * sin(direction);  // radians(direction));
-    // xPos += deltaX;
-    // yPos += deltaY;
   }
-
-  // Angle between points in radians
-  // private float calculateAngle(float x1, float y1, float x2, float y2) {
-  //   float deltaX = x2-x1;
-  //   float deltaY = y2-y1;
-  //   // prevent division by 0
-  //   float angle;
-  //   if (deltaX == 0) {
-  //     if (y2 > y1) {
-  //       angle = PI/2;
-  //     } else{
-  //       angle = -PI/2;
-  //     }
-  //   } else {
-  //     angle = atan(deltaY/deltaX);
-  //     if (deltaX >= 0) {
-  //       if (deltaY >= 0) {
-  //         // 1st
-  //         // leave it be
-  //       } else {
-  //         // 4th
-  //         angle = 2*PI + angle;
-  //       }
-  //     } else {
-  //         // 2nd & 3rd
-  //         angle = PI + angle;
-  //     }
-  //   } 
-
-  //   return angle;
-  // }
 
   private void repositionIfOutside() {
     if (pos.x > width) {
@@ -204,9 +83,6 @@ class Bird {
   private float getDistanceTo(Bird that) {
     PVector between = PVector.sub(that.pos, this.pos);
     return between.mag();
-    // float deltaX = that.xPos-this.xPos;
-    // float deltaY = that.yPos-this.yPos;
-    // return sqrt(pow(deltaX, 2) + pow(deltaY, 2));
   }
 
   private Bird findClosest() {
@@ -221,7 +97,6 @@ class Bird {
           closest = that;
         }  
       }
-      
     }
     return closest;
   }
