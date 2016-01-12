@@ -18,10 +18,10 @@ void setup() {
   bird = new Bird(width/2 + 20, height/2 + 20, birds);
   //birds.add(bird);
   
-  //for (int i=0; i < BIRD_AMOUNT; i++) {
-  // bird = new Bird(width/BIRD_AMOUNT*i, height/BIRD_AMOUNT*i, birds);
-  // birds.add(bird);
-  //}
+  // for (int i=0; i < BIRD_AMOUNT; i++) {
+  //   bird = new Bird(width/BIRD_AMOUNT*i, height/BIRD_AMOUNT*i, birds);
+  //   birds.add(bird);
+  // }
 
 }
 
