@@ -1,5 +1,6 @@
 class Bird {
   private static final float MAX_COURSE_CHANGE = PI/60;
+  private static final float FLYING_DISTANCE = 40;
 
   float xPos;
   float yPos;
@@ -21,7 +22,6 @@ class Bird {
     yPos = y;
     velocity = 2;
     direction = PI/2;
-
     triangle = new Triangle((int) xPos, (int) yPos, 20, 40, direction);
     this.otherBirds = otherBirds;
   }
@@ -31,89 +31,90 @@ class Bird {
     if (followMouse) {
       desiredDirection = calculateAngle(xPos, yPos, mouseX, mouseY);  
     } else {
-      Bird closest = findClosest(otherBirds);
+      Bird closest = findClosest();
       desiredDirection = getDirectionTo(closest);
     }
+    aimFor(desiredDirection);
     
-
-    // Change course as much as possible towards desired direction
-    float directionDelta = desiredDirection - direction;
-    println(" current: " + direction/PI + " Desired: " + desiredDirection/PI + " Delta: " + directionDelta/PI);
-
-    // Quadrant wrong direction loop prevention
-    int q = getQuadrant(direction);
-    if (
-      q == 4 && desiredDirection > direction + PI ||
-      q == 3 && desiredDirection < direction - PI ||
-      q == 2 && desiredDirection < direction - PI ||
-      q == 1 && desiredDirection > direction +  PI
-     ) {
-      directionDelta = -directionDelta;
-    } 
-
-    if (directionDelta >= 0) {
-      rotate(min(directionDelta, MAX_COURSE_CHANGE));
-    } else {
-      rotate(max(directionDelta, -MAX_COURSE_CHANGE));
-    }
-
-    // // Handle angle overflow
-    // if (direction >= 1.5*PI) {
-    //   direction -= 2*PI;
-    // } else if (direction <= 0.5*PI) {
-    //   direction += 2*PI;
-    // }
-
-    // if (desiredDirection/PI > maxPi) {
-    //   maxPi = desiredDirection/PI;
-    // }
-    // if (desiredDirection/PI < minPi) {
-    //   minPi = desiredDirection/PI;
-    // } 
-    // println("max: " + maxPi + " min: " + minPi);
-    // if (direction > 2*PI) {
-    //   direction = -PI;
-    // } else if (direction < PI) {
-    //   direction = 2*PI;
-    // } 
-
+    // avoidCollision();
+    
     updatePos();
     repositionIfOutside();
     triangle.moveTo((int) xPos, (int) yPos);
     triangle.setAngle(direction);
   }
 
-  private void rotate(float radians) {
-    setDirection(direction + radians);
+  // Change course as much as possible towards desired direction
+  private void aimFor(float desiredDirection) {
+    float directionDelta = desiredDirection - direction;
+    // directionDelta
+    println(" current: " + direction/PI + " Desired: " + desiredDirection/PI + " Delta: " + directionDelta/PI);
+
+    // Quadrant wrong direction loop prevention
+    int q = getQuadrant(direction);
+    println("q: " + q);
+    float rotationAngle = directionDelta;
+    if (q == 1 && rotationAngle > PI) {
+      rotationAngle = 2*PI - rotationAngle;
+    }
+
+
+    // if (directionDelta > PI) {
+    //   rotationAngle = 2*PI - directionDelta;
+    // } else {
+    //   rotationAngle = directionDelta;
+    // }
+    // if (q == 1 && rotationAngle )
+
+
+
+      // q == 1 && directionDelta > PI ||
+      // q == 4 && directionDelta < -PI ||
+      // q == 2 && directionDelta > PI ||
+      // q == 3 && directionDelta < -PI 
+    //  ) {
+    //   directionDelta = -directionDelta;
+    // } 
+
+    if (rotationAngle >= 0) {
+      rotate(min(rotationAngle, MAX_COURSE_CHANGE));
+    } else {
+      rotate(max(rotationAngle, -MAX_COURSE_CHANGE));
+    }
   }
 
   // Helper for extracting quadrant from angle
   private int getQuadrant(float angle) {
-    // angle = angle % (2*PI);
+    angle = angle % (2*PI);
 
-    if (-PI <= angle && angle < 0 ) {
-      return 4;
-    } else if (0 <= angle && angle < PI/2) {
+    if (0 <= angle && angle < PI/2 ) {
       return 1;
     } else if (PI/2 <= angle && angle < PI) {
       return 2;
-    } else if (PI <= angle && angle < 1.5*PI) {
+    } else if (PI <= angle && angle < 3*PI/2) {
       return 3;
+    } else if (3*PI/2 <= angle && angle < 2*PI) {
+      return 4;
     } else {
       return -1;
     }
   }
 
-  private void setDirection(float angle) {
-    direction = angle;
-    // Overflow handling
-    if (direction >= 1.5*PI) {
-      direction = -0.5*PI + (direction % (1.5*PI));
-    } else if (direction <= -0.5*PI) {
-      direction = 1.5*PI - (direction % (0.5*PI));
-    }
+  private void rotate(float radians) {
+    setDirection(direction + radians);
   }
 
+  // Set exact flying direction
+  private void setDirection(float angle) {
+    // Overflow handling
+    angle = angle % (2*PI);
+    if (angle < 0) {
+      angle += 2*PI;
+    } 
+    direction = angle; 
+  }
+
+  // Update position from course and velocity
   private void updatePos() {
     float deltaX = velocity * cos(direction);  // radians(direction));
     float deltaY = velocity * sin(direction);  // radians(direction));
@@ -133,13 +134,26 @@ class Bird {
       } else{
         angle = -PI/2;
       }
-    } else if (deltaX > 0) {
-      // 1st and 4th quadrant
-      angle = atan(deltaY/deltaX);
     } else {
-      // 2nd and 4th quadrant
-      angle = PI + atan(deltaY/deltaX);
-    }
+      angle = atan(deltaY/deltaX);
+      if (deltaX > 0) {
+        if (deltaY > 0) {
+          // 1st
+          // leave it be
+        } else {
+          // 4th
+          angle = 2*PI + angle;
+        }
+      } else {
+        if (deltaY > 0) {
+          // 2nd
+          angle = PI + angle;
+        } else {
+          // 3rd
+          angle = 3*PI/2 + angle;
+        }
+      }
+    } 
 
     return angle;
   }
@@ -178,16 +192,46 @@ class Bird {
     return sqrt(pow(deltaX, 2) + pow(deltaY, 2));
   }
 
-  private Bird findClosest(List<Bird> otherBirds) {
+  private Bird findClosest() {
     float distanceToClosest = Float.MAX_VALUE;
     Bird closest = null;
+    // println("Flock: " + otherBirds.size());
     for (Bird that: otherBirds) {
-      float distance = getDistanceTo(that);
-      if (distance < distanceToClosest) {
-        distanceToClosest = distance;
-        closest = that;
+      if (this != that) { // No point in comparing with oneself
+        float distance = getDistanceTo(that);
+        if (distance < distanceToClosest) {
+          distanceToClosest = distance;
+          closest = that;
+        }  
       }
+      
     }
     return closest;
+  }
+
+  private void avoidCollision() {
+    Bird closest = findClosest();
+    if (getDistanceTo(closest) <= FLYING_DISTANCE) {
+      avoid(closest);  
+      println("Avoiding");
+    }
+  }
+
+  private void avoid(Bird that) {
+    if (isHeadingFor(that)) {
+      float newDirection = atan((FLYING_DISTANCE/2)/getDistanceTo(that));
+      aimFor(newDirection + PI/20);  
+    }
+  }
+
+  private boolean isHeadingFor(Bird that) {
+    // Normalize direction angle 
+    float tempCourse = direction + 0.5*PI;
+    // normDirection = 
+    if (tempCourse - getDirectionTo(that) < PI) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
