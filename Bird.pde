@@ -54,40 +54,17 @@ class Bird {
     int q = getQuadrant(direction);
     println("q: " + q);
     float rotationAngle = directionDelta;
-    // if (q == 1 && rotationAngle > PI) {
-    //   rotationAngle = 2*PI - rotationAngle;
-    // }
-
-
-    // if (directionDelta > PI) {
-    //   rotationAngle = 2*PI - directionDelta;
-    // } else {
-    //   rotationAngle = directionDelta;
-    // }
-    // if (q == 1 && rotationAngle )
-
-
+ 
     if (
       q == 1 && directionDelta > PI ||
       q == 4 && directionDelta < -PI ||
       q == 2 && directionDelta > PI ||
       q == 3 && directionDelta < -PI 
      ) {
+      // rotationAngle = 2*PI - rotationAngle;
       directionDelta = -directionDelta;
       rotationAngle = directionDelta;
     } 
-
-
-     // if (
-     //   q == 4 && desiredDirection > direction + PI ||
-     //   q == 3 && desiredDirection < direction - PI ||
-     //   q == 2 && desiredDirection < direction - PI ||
-     //   q == 1 && desiredDirection > direction +  PI
-     //  ) {
-     //   directionDelta = -directionDelta;
-     //  rotationAngle = directionDelta;
-     //  rotationAngle = 2*PI - rotationAngle;
-     // } 
 
     if (rotationAngle >= 0) {
       rotate(min(rotationAngle, MAX_COURSE_CHANGE));
