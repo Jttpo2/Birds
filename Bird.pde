@@ -1,4 +1,6 @@
 class Bird {
+  private static final float MAX_COURSE_CHANGE = PI/60;
+
   float xPos;
   float yPos;
 
@@ -11,23 +13,65 @@ class Bird {
 
   boolean followMouse = true;
 
+  float maxPi = 0;
+  float minPi = 0;
+ 
   public Bird(float x, float y, List<Bird> otherBirds) {
     xPos = x;
     yPos = y;
     velocity = 2;
     direction = PI/2;
 
-    triangle = new Triangle((int) xPos, (int) yPos, 100, 200, direction);
+    triangle = new Triangle((int) xPos, (int) yPos, 20, 40, direction);
     this.otherBirds = otherBirds;
   }
 
   public void update() {
+    float desiredDirection;
     if (followMouse) {
-      direction = calculateAngle(xPos, yPos, mouseX, mouseY);  
+      desiredDirection = calculateAngle(xPos, yPos, mouseX, mouseY);  
     } else {
       Bird closest = findClosest(otherBirds);
-      goTowards(closest);
+      desiredDirection = getDirectionTo(closest);
     }
+    
+
+    // Change course as much as possible towards desired direction
+    float directionDelta = desiredDirection - direction;
+    println(" current: " + direction/PI + " Desired: " + desiredDirection/PI + " Delta: " + directionDelta);
+
+    // 1st and 4th quadrant wrong direction loop prevention
+    // if ((direction > PI && desiredDirection < 0) ||
+    //  direction < 0 && desiredDirection > 0) {
+    //   directionDelta = -directionDelta;
+    // } 
+
+    if (directionDelta >= 0) {
+      direction += min(directionDelta, MAX_COURSE_CHANGE);
+    } else {
+      direction += max(directionDelta, -MAX_COURSE_CHANGE);
+    }
+
+    // // Handle angle overflow
+    // if (direction >= 1.5*PI) {
+    //   direction -= 2*PI;
+    // } else if (direction <= 0.5*PI) {
+    //   direction += 2*PI;
+    // }
+
+    // if (desiredDirection/PI > maxPi) {
+    //   maxPi = desiredDirection/PI;
+    // }
+    // if (desiredDirection/PI < minPi) {
+    //   minPi = desiredDirection/PI;
+    // } 
+    // println("max: " + maxPi + " min: " + minPi);
+    // if (direction > 2*PI) {
+    //   direction = -PI;
+    // } else if (direction < PI) {
+    //   direction = 2*PI;
+    // } 
+
     updatePos();
     repositionIfOutside();
     triangle.moveTo((int) xPos, (int) yPos);
@@ -60,6 +104,7 @@ class Bird {
       // 2nd and 4th quadrant
       angle = PI + atan(deltaY/deltaX);
     }
+
     return angle;
   }
 
@@ -80,15 +125,15 @@ class Bird {
     triangle.display();
   }
 
-  private void goTowards(Bird that) {
+  private float getDirectionTo(Bird that) {
     if (that == null) {
       println("No bird to fly towards");
-      return;
+      return 0;
     }
 
     float angleToBird = calculateAngle(this.xPos, this.yPos, that.xPos, that.yPos);
     println("to bird: " + angleToBird);
-    direction = angleToBird;
+    return angleToBird;
   }
 
   private float getDistanceTo(Bird that) {
