@@ -9,7 +9,7 @@ class Bird {
 
   List<Bird> otherBirds;
 
-  boolean followMouse = true;
+  boolean followMouse = false;
 
   public Bird(float x, float y, List<Bird> otherBirds) {
     xPos = x;
