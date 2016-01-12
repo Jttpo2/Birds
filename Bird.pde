@@ -33,19 +33,21 @@ class Bird {
   }
 
   public void update() {
-    float desiredDirection;
-    if (followMouse) {
+    // float desiredDirection;
+    // if (followMouse) {
       PVector mousePos = new PVector(mouseX, mouseY);
+      aimFor(mousePos);
       // desiredDirection = calculateAngle(pos.x, pos.y, mouseX, mouseY);  
-      PVector between = PVector.sub(mousePos, this.pos);
-      desiredDirection = between.heading();
-    } else {
-      Bird closest = findClosest();
-      desiredDirection = getDirectionTo(closest);
-    }
-    aimFor(desiredDirection);
+      // PVector between = PVector.sub(mousePos, this.pos);
+      // PVector target 
+      // desiredDirection = between.heading();
+    // } else {
+    //   Bird closest = findClosest();
+    //   desiredDirection = getDirectionTo(closest);
+    // }
+    // aimFor(desiredDirection);
     
-    avoidCollision();
+    // avoidCollision();
     
     updatePos();
     repositionIfOutside();
@@ -54,48 +56,63 @@ class Bird {
   }
 
   // Change course as much as possible towards desired direction
-  private void aimFor(float desiredDirection) {
-    float directionDelta = desiredDirection - vel.heading();
-    // directionDelta
-    println(" current: " + vel.heading()/PI + " Desired: " + desiredDirection/PI + " Delta: " + directionDelta/PI);
-
-    // Quadrant wrong direction loop prevention
-    int q = getQuadrant(vel.heading());
-    // println("q: " + q);
-    if (
-      q == 1 && directionDelta > PI ||
-      q == 4 && directionDelta < -PI ||
-      q == 2 && directionDelta > PI ||
-      q == 3 && directionDelta < -PI 
-     ) {
-      // rotationAngle = 2*PI - rotationAngle;
-      directionDelta = -directionDelta;
-    } 
-
-    if (directionDelta >= 0) {
-      rotate(min(directionDelta, MAX_COURSE_CHANGE));
-    } else {
-      rotate(max(directionDelta, -MAX_COURSE_CHANGE));
-    }
+  private void aimFor(PVector target) {
+    PVector between = PVector.sub(target, this.pos);
+    vel = between;
+    // vel.mult(2);
+    // if (directionDelta >= 0) {
+    //   rotate(min(directionDelta, MAX_COURSE_CHANGE));
+    // } else {
+    //   rotate(max(directionDelta, -MAX_COURSE_CHANGE));
+    // }
   }
+
+
+  //   float directionDelta = desiredDirection - vel.heading();
+    
+  //   // Quadrant wrong direction loop prevention
+  //   int q = getQuadrant(vel.heading());
+  //   println("q: " + q);
+  //   println(" current: " + vel.heading()/PI + " Desired: " + desiredDirection/PI + " Delta: " + directionDelta/PI);
+  //   if (
+  //     // q == 1 && directionDelta > PI //||
+  //     // q == 4 && directionDelta < -PI ||
+  //     q == 2 && directionDelta < -PI ||
+  //     q == 3 && directionDelta < PI 
+  //    ) {
+  //     // rotationAngle = 2*PI - rotationAngle;
+  //     directionDelta = -directionDelta;
+  //   } 
+
+  //     // q == 1 && directionDelta > PI //||
+  //     // q == 4 && directionDelta < -PI ||
+  //     // q == 2 && directionDelta > PI ||
+  //     // q == 3 && directionDelta > -PI 
+
+  //   if (directionDelta >= 0) {
+  //     rotate(min(directionDelta, MAX_COURSE_CHANGE));
+  //   } else {
+  //     rotate(max(directionDelta, -MAX_COURSE_CHANGE));
+  //   }
+  // }
 
   // Helper for extracting quadrant from angle
-  private int getQuadrant(float angle) {
-    angle = angle % (2*PI);
+  // private int getQuadrant(float angle) {
+  //   // angle = angle % (2*PI);
 
-    if (0 <= angle && angle < PI/2 ) {
-      return 1;
-    } else if (PI/2 <= angle && angle < PI) {
-      return 2;
-    } else if (PI <= angle && angle < 3*PI/2) {
-      return 3;
-    } else if (3*PI/2 <= angle && angle < 2*PI) {
-      return 4;
-    } else {
-      println("Outside standard quadrants");
-      return -1;
-    }
-  }
+  //   if (0 <= angle && angle < PI/2 ) {
+  //     return 1;
+  //   } else if (PI/2 <= angle && angle < PI) {
+  //     return 2;
+  //   } else if (-PI <= angle && angle < -PI/2) {
+  //     return 3;
+  //   } else if (-PI/2 <= angle && angle < 0) {
+  //     return 4;
+  //   } else {
+  //     println("Outside standard quadrants");
+  //     return -1;
+  //   }
+  // }
 
   private void rotate(float radians) {
     // setDirection(vel.heading() + radians);
@@ -222,7 +239,8 @@ class Bird {
   private void avoid(Bird that) {
     if (isHeadingFor(that)) {
       float newDirection = atan((FLYING_DISTANCE/2)/getDistanceTo(that));
-      aimFor(newDirection);  
+      
+      // aimFor(newDirection);  
     }
   }
 
