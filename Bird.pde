@@ -67,14 +67,15 @@ class Bird {
     // if (q == 1 && rotationAngle )
 
 
-
-      // q == 1 && directionDelta > PI ||
-      // q == 4 && directionDelta < -PI ||
-      // q == 2 && directionDelta > PI ||
-      // q == 3 && directionDelta < -PI 
-    //  ) {
-    //   directionDelta = -directionDelta;
-    // } 
+    if (
+      q == 1 && directionDelta > PI ||
+      q == 4 && directionDelta < -PI ||
+      q == 2 && directionDelta > PI ||
+      q == 3 && directionDelta < -PI 
+     ) {
+      directionDelta = -directionDelta;
+      rotationAngle = directionDelta;
+    } 
 
 
      // if (
