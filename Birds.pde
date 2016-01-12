@@ -1,7 +1,7 @@
 import java.util.List;
 
 List<Bird> birds;
-private static final int BIRD_AMOUNT = 10;
+private static final int BIRD_AMOUNT = 1000;
 
 private boolean isRunning = true;
 
@@ -13,18 +13,22 @@ void setup() {
   size(800, 600);
   background(grey);
   //frameRate(1);
+  frameRate(30);
 
   birds = new ArrayList<Bird>();
   Bird bird = new Bird(width/2 - 20, height/2 - 20, birds);  
   birds.add(bird);
   bird = new Bird(width/2 + 20, height/2 + 20, birds);
-  //birds.add(bird);
+  birds.add(bird);
   
-  for (int i=0; i < BIRD_AMOUNT; i++) {
-    bird = new Bird(width/BIRD_AMOUNT*i, height/BIRD_AMOUNT*i, birds);
-    birds.add(bird);
+  for (int i=0; i < sqrt(BIRD_AMOUNT); i++) {
+    for (int j=0; j < sqrt(BIRD_AMOUNT); j++) {
+      float x = (width/sqrt(BIRD_AMOUNT))*i;
+      float y = (height/sqrt(BIRD_AMOUNT))*j;
+      bird = new Bird(y, x, birds);
+      birds.add(bird);   
+    }
   }
-
 }
 
 void draw() {

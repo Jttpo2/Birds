@@ -70,9 +70,9 @@ public class Triangle {
     // Angle triangle
     triangle(corner1X, corner1Y, corner2X, corner2Y, corner3X, corner3Y);
     
-    fill(white);
-    stroke(white);
-    rect(centerX, centerY, 1, 1);
+    // fill(white);
+    // stroke(white);
+    // rect(centerX, centerY, 1, 1);
     // fill(grey);
     // rect(corner1X, corner1Y, 10, 10);
 

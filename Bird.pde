@@ -1,12 +1,15 @@
 class Bird {
+  private static final int BIRD_LENGTH = 2;
+  private static final int BIRD_WIDTH = BIRD_LENGTH/2;
+
   private static final float MAX_COURSE_CHANGE = PI/60;
-  private static final float FLYING_DISTANCE = 100;
+  private static final float FLYING_DISTANCE = BIRD_LENGTH*1.7;
+
+  float topSpeed = 4;
 
   PVector pos;
   PVector vel;
   PVector acc;
-
-  float topSpeed = 4;
 
   Triangle triangle;
 
@@ -17,7 +20,7 @@ class Bird {
     vel = PVector.fromAngle(3*PI/2);
     vel.mult(1);
 
-    triangle = new Triangle((int) pos.x, (int) pos.y, 20, 40, vel.heading());
+    triangle = new Triangle((int) pos.x, (int) pos.y, BIRD_WIDTH, BIRD_LENGTH, vel.heading());
     this.otherBirds = otherBirds;
   }
 
@@ -68,16 +71,13 @@ class Bird {
   }
 
   private float getDirectionTo(Bird that) {
-    if (that == null) {
-      println("No bird to fly towards");
-      return 0;
-    }
-
-    // float angleToBird = calculateAngle(this.xPos, this.yPos, that.xPos, that.yPos);
     PVector between = PVector.sub(that.pos, this.pos);
     float angleToBird = between.heading();
-    println("to bird: " + angleToBird);
     return angleToBird;
+  }
+
+  private PVector getVectorTo(Bird that) {
+    return PVector.sub(that.pos, this.pos);
   }
 
   private float getDistanceTo(Bird that) {
@@ -88,7 +88,6 @@ class Bird {
   private Bird findClosest() {
     float distanceToClosest = Float.MAX_VALUE;
     Bird closest = null;
-    // println("Flock: " + otherBirds.size());
     for (Bird that: otherBirds) {
       if (this != that) { // No point in comparing with oneself
         float distance = getDistanceTo(that);
@@ -113,20 +112,16 @@ class Bird {
   }
 
   private void avoid(Bird that) {
-    if (isHeadingFor(that)) {
-      float newDirection = atan((FLYING_DISTANCE/2)/getDistanceTo(that));
-      
-      aimFor(PVector.fromAngle(newDirection));  
+    if (isHeadingFor(that)) {    
+      PVector toBird = PVector.sub(that.pos, this.pos);
+      toBird.normalize();
+      toBird.mult(-1);
+      vel.add(toBird);
     }
   }
 
   private boolean isHeadingFor(Bird that) {
     float delta = vel.heading() - getDirectionTo(that);
-    if (abs(delta) < PI) {
-      println(this + " Heading for " + that);
-      return true;
-    } else {
-      return false;
-    }
+    return abs(delta) < PI;
   }
 }
