@@ -59,6 +59,7 @@ class Bird {
   private void aimFor(PVector target) {
     PVector between = PVector.sub(target, this.pos);
     vel = between;
+    vel.mult(0.07);
     // vel.mult(2);
     // if (directionDelta >= 0) {
     //   rotate(min(directionDelta, MAX_COURSE_CHANGE));
