@@ -16,7 +16,7 @@ void setup() {
   frameRate(30);
 
   birds = new ArrayList<Bird>();
-  Bird bird = new Bird(width/2 - 20, height/2 - 20, birds);  
+  Bird bird = new Bird(width/2 - 20, height/2 - 20, birds, true); // leader  
   birds.add(bird);
   bird = new Bird(width/2 + 20, height/2 + 20, birds);
   birds.add(bird);

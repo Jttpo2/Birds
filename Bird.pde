@@ -3,7 +3,9 @@ class Bird {
   private static final int BIRD_WIDTH = BIRD_LENGTH/2;
 
   private static final float MAX_COURSE_CHANGE = PI/60;
-  private static final float FLYING_DISTANCE = BIRD_LENGTH*1.7;
+  private static final float FLYING_DISTANCE = BIRD_LENGTH*3;
+
+  private static final boolean FOLLOW_LEADER = false;
 
   float topSpeed = 4;
 
@@ -13,20 +15,42 @@ class Bird {
 
   Triangle triangle;
 
+  boolean isLeader = false;
   List<Bird> otherBirds;
+  Bird leader;
  
-  public Bird(float x, float y, List<Bird> otherBirds) {
+  public Bird(float x, float y, List<Bird> otherBirds, boolean isLeader) {
     pos = new PVector(x, y);
     vel = PVector.fromAngle(3*PI/2);
     vel.mult(1);
 
     triangle = new Triangle((int) pos.x, (int) pos.y, BIRD_WIDTH, BIRD_LENGTH, vel.heading());
     this.otherBirds = otherBirds;
+    this.isLeader = isLeader;
+  }
+
+  public Bird(float x, float y, List<Bird> otherBirds) {
+    this(x, y, otherBirds, false);
   }
 
   public void update() {  
-    PVector mousePos = new PVector(mouseX, mouseY);
-    aimFor(mousePos);
+    PVector target; 
+    if (FOLLOW_LEADER) {
+      if (isLeader) {
+        target = new PVector(mouseX, mouseY);
+      } else {
+        Bird l = getLeader();
+        if (l != null) {
+          target = l.pos;
+        } else {
+          target = new PVector(mouseX, mouseY);
+        }
+      }
+    } else {
+      target = new PVector(mouseX, mouseY);
+    } 
+      
+    aimFor(target);
       
     avoidCollision();
     
@@ -123,5 +147,17 @@ class Bird {
   private boolean isHeadingFor(Bird that) {
     float delta = vel.heading() - getDirectionTo(that);
     return abs(delta) < PI;
+  }
+
+  private Bird getLeader() {
+    if (leader == null) {
+      for (Bird b: otherBirds) {
+       if (b.isLeader) {
+        leader = b;
+        break;
+       }
+     }  
+   }
+     return leader;
   }
 }
