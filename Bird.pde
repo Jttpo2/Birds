@@ -54,9 +54,9 @@ class Bird {
     int q = getQuadrant(direction);
     println("q: " + q);
     float rotationAngle = directionDelta;
-    if (q == 1 && rotationAngle > PI) {
-      rotationAngle = 2*PI - rotationAngle;
-    }
+    // if (q == 1 && rotationAngle > PI) {
+    //   rotationAngle = 2*PI - rotationAngle;
+    // }
 
 
     // if (directionDelta > PI) {
@@ -75,6 +75,18 @@ class Bird {
     //  ) {
     //   directionDelta = -directionDelta;
     // } 
+
+
+     // if (
+     //   q == 4 && desiredDirection > direction + PI ||
+     //   q == 3 && desiredDirection < direction - PI ||
+     //   q == 2 && desiredDirection < direction - PI ||
+     //   q == 1 && desiredDirection > direction +  PI
+     //  ) {
+     //   directionDelta = -directionDelta;
+     //  rotationAngle = directionDelta;
+     //  rotationAngle = 2*PI - rotationAngle;
+     // } 
 
     if (rotationAngle >= 0) {
       rotate(min(rotationAngle, MAX_COURSE_CHANGE));
@@ -96,6 +108,7 @@ class Bird {
     } else if (3*PI/2 <= angle && angle < 2*PI) {
       return 4;
     } else {
+      println("Outside standard quadrants");
       return -1;
     }
   }
@@ -136,8 +149,8 @@ class Bird {
       }
     } else {
       angle = atan(deltaY/deltaX);
-      if (deltaX > 0) {
-        if (deltaY > 0) {
+      if (deltaX >= 0) {
+        if (deltaY >= 0) {
           // 1st
           // leave it be
         } else {
@@ -145,13 +158,8 @@ class Bird {
           angle = 2*PI + angle;
         }
       } else {
-        if (deltaY > 0) {
-          // 2nd
+          // 2nd & 3rd
           angle = PI + angle;
-        } else {
-          // 3rd
-          angle = 3*PI/2 + angle;
-        }
       }
     } 
 
