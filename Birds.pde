@@ -9,7 +9,7 @@ color grey  = color(150, 150, 150);
 void setup() {
   size(800, 600);
   background(grey);
-  //frameRate(10);
+  //frameRate(20);
 
   birds = new ArrayList<Bird>();
   Bird bird = new Bird(width/2, height/2, birds);  
@@ -26,3 +26,7 @@ void draw() {
   	b.display();
   }
 }
+
+void keyPressed() {
+    println("Key pressed");
+  }

@@ -38,13 +38,18 @@ class Bird {
 
     // Change course as much as possible towards desired direction
     float directionDelta = desiredDirection - direction;
-    println(" current: " + direction/PI + " Desired: " + desiredDirection/PI + " Delta: " + directionDelta);
+    println(" current: " + direction/PI + " Desired: " + desiredDirection/PI + " Delta: " + directionDelta/PI);
 
-    // 1st and 4th quadrant wrong direction loop prevention
-    // if ((direction > PI && desiredDirection < 0) ||
-    //  direction < 0 && desiredDirection > 0) {
-    //   directionDelta = -directionDelta;
-    // } 
+    // Quadrant wrong direction loop prevention
+    int q = getQuadrant(direction);
+    if (
+      q == 4 && desiredDirection > direction + PI ||
+      q == 3 && desiredDirection < direction - PI ||
+      q == 2 && desiredDirection < direction - PI ||
+      q == 1 && desiredDirection > direction +  PI
+     ) {
+      directionDelta = -directionDelta;
+    } 
 
     if (directionDelta >= 0) {
       rotate(min(directionDelta, MAX_COURSE_CHANGE));
@@ -82,13 +87,30 @@ class Bird {
     setDirection(direction + radians);
   }
 
+  // Helper for extracting quadrant from angle
+  private int getQuadrant(float angle) {
+    // angle = angle % (2*PI);
+
+    if (-PI <= angle && angle < 0 ) {
+      return 4;
+    } else if (0 <= angle && angle < PI/2) {
+      return 1;
+    } else if (PI/2 <= angle && angle < PI) {
+      return 2;
+    } else if (PI <= angle && angle < 1.5*PI) {
+      return 3;
+    } else {
+      return -1;
+    }
+  }
+
   private void setDirection(float angle) {
     direction = angle;
     // Overflow handling
-    if (direction > 1.5*PI) {
-      direction = -0.5*PI + (direction % 2*PI);
-    } else if (direction < -0.5*PI) {
-      direction = 1.5*PI - (direction % 2*PI);
+    if (direction >= 1.5*PI) {
+      direction = -0.5*PI + (direction % (1.5*PI));
+    } else if (direction <= -0.5*PI) {
+      direction = 1.5*PI - (direction % (0.5*PI));
     }
   }
 
