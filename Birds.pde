@@ -12,10 +12,10 @@ color grey  = color(150, 150, 150);
 PImage image;
 
 void setup() {
-  size(800, 600);
+  size(925, 750);
   background(grey);
   //frameRate(1);
-  frameRate(30);
+  frameRate(40);
 
   image = loadImage("london-skyline[marytaughtme.files.wordpress.com].jpg");
 

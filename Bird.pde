@@ -27,7 +27,7 @@ class Bird {
     vel = PVector.fromAngle(3*PI/2);
     vel.mult(1);
 
-    triangle = new Triangle((int) pos.x, (int) pos.y, BIRD_WIDTH, BIRD_LENGTH, vel.heading());
+    triangle = new Triangle((int) pos.x, (int) pos.y, BIRD_WIDTH, BIRD_LENGTH, vel);
     this.otherBirds = otherBirds;
     this.isLeader = isLeader;
   }
@@ -64,7 +64,7 @@ class Bird {
       checkIfOnscreen();
     }
     triangle.moveTo((int) pos.x, (int) pos.y);
-    triangle.setAngle(vel.heading());
+    triangle.setAngle(vel);
   }
 
   // Change course as much as possible towards desired direction
@@ -90,11 +90,11 @@ class Bird {
     } else if (pos.x < 0) {
       pos.x = width;
     }
-    if (pos.y > height) {
-      pos.y = 0;
-    } else if (pos.y < 0) {
-      pos.y = height;
-    }
+    // if (pos.y > height) {
+    //   pos.y = 0;
+    // } else if (pos.y < 0) {
+    //   pos.y = height;
+    // }
   }
 
   public void display() {
