@@ -1,13 +1,14 @@
 class Bird {
-  private static final int BIRD_LENGTH = 2;
-  private static final int BIRD_WIDTH = BIRD_LENGTH/2;
+  private static final int BIRD_LENGTH = 5;
+  private static final int BIRD_WIDTH = BIRD_LENGTH/2+1;
 
   private static final float MAX_COURSE_CHANGE = PI/60;
   private static final float FLYING_DISTANCE = BIRD_LENGTH*3;
 
   private static final boolean FOLLOW_LEADER = false;
 
-  float topSpeed = 4;
+  float topSpeed = 10;
+  float acceleratorMultiplier = 0.8; // seems to be a grouping measure
 
   PVector pos;
   PVector vel;
@@ -27,7 +28,12 @@ class Bird {
     vel = PVector.fromAngle(3*PI/2);
     vel.mult(1);
 
-    triangle = new Triangle((int) pos.x, (int) pos.y, BIRD_WIDTH, BIRD_LENGTH, vel);
+    // color col = black;
+    // color col = color(50, random(0, 255), 30);
+    // color col = color(random(0, 40));
+    color col = color(random(240,255), 255, 255);
+
+    triangle = new Triangle((int) pos.x, (int) pos.y, BIRD_WIDTH, BIRD_LENGTH, vel, col);
     this.otherBirds = otherBirds;
     this.isLeader = isLeader;
   }
@@ -71,12 +77,11 @@ class Bird {
   private void aimFor(PVector targetPos) {
     PVector toTarget = PVector.sub(targetPos, pos);    
     toTarget.normalize();
-    toTarget.mult(0.3);
+    toTarget.mult(acceleratorMultiplier);
     acc = toTarget;
     vel.add(acc);
     
     vel.limit(topSpeed);
-
   }
 
   // Update position from course and velocity

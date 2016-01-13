@@ -15,7 +15,9 @@ void setup() {
   size(925, 750);
   background(grey);
   //frameRate(1);
-  frameRate(40);
+  frameRate(55);
+  colorMode(HSB, 255, 255, 255);
+
 
   image = loadImage("london-skyline[marytaughtme.files.wordpress.com].jpg");
 
@@ -51,8 +53,6 @@ void draw() {
       b.display();
     }  
   }
-  
-
 }
 void keyPressed() {
     println("Key pressed");

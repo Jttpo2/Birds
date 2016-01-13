@@ -3,17 +3,19 @@ public class Triangle {
   float triangleWidth;
   float triangleHeight;
 
-  PShape shape;
-
   PVector pos;
   PVector angle;
 
-  public Triangle(int x, int y, float triangleWidth, float triangleHeight, PVector angle) {
+  color col;
+
+  public Triangle(int x, int y, float triangleWidth, float triangleHeight, PVector angle, color c) {
     this.angle = angle;
     pos = new PVector(x, y);
 
     this.triangleWidth = triangleWidth;
     this.triangleHeight = triangleHeight;
+
+    col = c;
   }
 
   public void setAngle(PVector angle) {
@@ -54,8 +56,9 @@ public class Triangle {
     float corner3X = pos.x + deltaX3;
     float corner3Y = pos.y + deltaY3;
 
-  stroke(black);
-  fill(black);
+  noStroke();
+  //stroke(black);
+  fill(col);
   triangle(corner1X, corner1Y, corner2X, corner2Y, corner3X, corner3Y);
   }
 }
