@@ -1,3 +1,123 @@
+import processing.core.*; 
+import processing.data.*; 
+import processing.event.*; 
+import processing.opengl.*; 
+
+import java.util.List; 
+
+import java.util.HashMap; 
+import java.util.ArrayList; 
+import java.io.File; 
+import java.io.BufferedReader; 
+import java.io.PrintWriter; 
+import java.io.InputStream; 
+import java.io.OutputStream; 
+import java.io.IOException; 
+
+public class Birds extends PApplet {
+
+
+static final boolean devMode = false;
+
+static final int BIRD_LENGTH = devMode ? 100 : 8;
+static final int BIRD_WIDTH = BIRD_LENGTH/2+1;
+static final boolean FOLLOW_LEADER = false;
+static float topSpeed = devMode ? 3: 10.5f;
+static float acceleratorMultiplier = topSpeed*0.07f; // how fast bird changes course towards mouse pointer. Low (0.01) looks like bees. 0.04 kind of like starlings
+static float avoidanceEagerness = 0.8f; // low (-1) is nice for lots of small birds. 0.1 seems natural.
+static float flyingDistance = BIRD_LENGTH*3;
+
+static final int textSize = 10;
+
+Flock flock;
+
+private boolean isRunning = true;
+
+int white = color(255, 255, 255);
+int black = color(0, 0, 0);
+int grey  = color(150, 150, 150);
+
+PImage image;
+
+public void setup() {
+  // fullScreen(P2D);
+    
+  //frameRate(1);
+  frameRate(40);
+  colorMode(HSB, 255, 255, 255);
+
+  image = loadImage("london-skyline[marytaughtme.files.wordpress.com].jpg");
+  image.resize(width+3,0);
+  textSize(textSize);
+
+  flock = new Flock(10);
+}
+
+public void draw() {
+  if (isRunning) {
+    background(white);
+    image(image, -3, height-image.height);
+    showNumbers();
+
+    flock.update();
+    flock.display();
+  }
+}
+
+private double roundOff(double value) {
+  return (double)Math.round(value * 100d) / 100d;
+}
+
+public void mousePressed() {
+  isRunning = !isRunning;
+}
+
+public void keyPressed() {
+  switch (keyCode) {
+  case 'a':
+  case 'A': 
+    topSpeed += 0.5f;
+    break;
+  case 'z':
+  case 'Z': 
+    topSpeed -= 0.5f;
+    break;
+  case 's': 
+  case 'S': 
+    acceleratorMultiplier += 0.05f;
+    break;
+  case 'x':
+  case 'X': 
+    acceleratorMultiplier -= 0.05f;
+    break;
+  case 'd':
+  case 'D': 
+    avoidanceEagerness += 0.05f;
+    break;
+  case 'c': 
+  case 'C': 
+    avoidanceEagerness -= 0.05f;
+    break;
+  case 'f':
+  case 'F': 
+    flyingDistance += 5;
+    break;
+  case 'v': 
+  case 'V': 
+    flyingDistance -= 5;
+    break;
+  }
+}
+
+private void showNumbers() {
+  fill(grey);
+  int initDistance = (int)(width/2.65f);
+  text("Speed: " + topSpeed, initDistance, height-textSize);
+  text("DirChange: " + roundOff(acceleratorMultiplier), initDistance+75, height-textSize);
+  text("Avoidance: " + roundOff(avoidanceEagerness), initDistance+160, height-textSize);
+  text("Distance: " + roundOff(flyingDistance), initDistance+250, height-textSize);
+  text(PApplet.parseInt(frameRate) + " fps", width-50, height-textSize); 
+}
 class Bird {
   
   PVector pos;
@@ -5,7 +125,7 @@ class Bird {
   PVector acc;
 
   PShape tri;
-  color col;
+  int col;
 
   boolean isLeader = false;
   List<Bird> otherBirds;
@@ -194,5 +314,65 @@ class Bird {
     triangle.setFill(col);
     triangle.setStroke(false);
     return triangle;
+  }
+}
+public class Flock {
+	private PVector pos;
+	private PVector vel;
+	private int baseColor;
+	private List<Bird> birds;
+
+	private boolean followMouse = true;
+
+	public Flock(int size) {
+		birds = new ArrayList<Bird>();
+		Bird bird;
+
+		// for (int i=0; i < sqrt(size); i++) {
+		// 	for (int j=0; j < sqrt(size); j++) {
+		// 		float x = (width/2/sqrt(size))*i - width;
+		// 		float y = (height/2/sqrt(size))*j - height;
+		// 		birds.add(new Bird(x, y, birds));
+		// 	}
+		// }
+
+		// First dash of birds
+		for (int i=0; i<size; i++) {
+			bird = new Bird(random(width/3, width/2*3), random(height/3, height/2*3), birds);
+			birds.add(bird);  
+		}
+	}
+
+	public void update() {
+		int targetX;
+		int targetY;
+		if (followMouse) {
+			targetX = mouseX;
+			targetY = mouseY;
+		} else {
+			targetX = 0;
+			targetY = 0;
+		}
+		for (Bird b : birds) {
+			b.update(targetX, targetY);
+		}
+
+	}
+
+	public void display() {
+		for (Bird b : birds) {
+			b.display();
+		}
+	}
+
+}
+  public void settings() {  size(925, 750, P2D); }
+  static public void main(String[] passedArgs) {
+    String[] appletArgs = new String[] { "Birds" };
+    if (passedArgs != null) {
+      PApplet.main(concat(appletArgs, passedArgs));
+    } else {
+      PApplet.main(appletArgs);
+    }
   }
 }

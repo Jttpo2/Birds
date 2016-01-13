@@ -11,8 +11,7 @@ static float flyingDistance = BIRD_LENGTH*3;
 
 static final int textSize = 10;
 
-private static final int BIRD_AMOUNT = 650;
-List<Bird> birds;
+Flock flock;
 
 private boolean isRunning = true;
 
@@ -23,8 +22,8 @@ color grey  = color(150, 150, 150);
 PImage image;
 
 void setup() {
-  //size(925, 750, P3D);
-  fullScreen(P2D);
+  // fullScreen(P2D);
+  size(925, 750, P2D);  
   //frameRate(1);
   frameRate(40);
   colorMode(HSB, 255, 255, 255);
@@ -33,28 +32,7 @@ void setup() {
   image.resize(width+3,0);
   textSize(textSize);
 
-  birds = new ArrayList<Bird>();
-  Bird bird = new Bird(width/2 - 20, height/2 - 20, birds, true); // leader  
-  birds.add(bird);
-  //bird = new Bird(width/2 + 20, height/2 + 20, birds);
-  //birds.add(bird);
-
-  // First dash of birds
-  for (int i=0; i<10; i++) {
-   bird = new Bird(random(width/3, width/2*3), random(height/3, height/2*3), birds);
-     birds.add(bird);  
-  }
-
-  if (!devMode) {
-    for (int i=0; i < sqrt(BIRD_AMOUNT); i++) {
-      for (int j=0; j < sqrt(BIRD_AMOUNT); j++) {
-        float x = (width/2/sqrt(BIRD_AMOUNT))*i - width;
-        float y = (height/2/sqrt(BIRD_AMOUNT))*j - height;
-        bird = new Bird(x, y, birds);
-        birds.add(bird);
-      }
-    }
-  }
+  flock = new Flock(10);
 }
 
 void draw() {
@@ -63,10 +41,8 @@ void draw() {
     image(image, -3, height-image.height);
     showNumbers();
 
-    for (Bird b : birds) {
-      b.update();
-      b.display();
-    }
+    flock.update();
+    flock.display();
   }
 }
 
