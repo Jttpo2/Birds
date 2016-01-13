@@ -18,6 +18,9 @@ class Bird {
   boolean isLeader = false;
   List<Bird> otherBirds;
   Bird leader;
+
+  // for dramatic entrance
+  boolean hasEnteredScreen = false;
  
   public Bird(float x, float y, List<Bird> otherBirds, boolean isLeader) {
     pos = new PVector(x, y);
@@ -55,7 +58,11 @@ class Bird {
     avoidCollision();
     
     updatePos();
-    repositionIfOutside();
+    if (hasEnteredScreen) {
+      repositionIfOutside();  
+    } else {
+      checkIfOnscreen();
+    }
     triangle.moveTo((int) pos.x, (int) pos.y);
     triangle.setAngle(vel.heading());
   }
@@ -159,5 +166,13 @@ class Bird {
      }  
    }
      return leader;
+  }
+
+  // For dramatic entrance
+  private void checkIfOnscreen() {
+    if (0 < pos.x && pos.x < width &&
+      0 < pos.y && pos.y < height) {
+      hasEnteredScreen = true;
+    }
   }
 }
