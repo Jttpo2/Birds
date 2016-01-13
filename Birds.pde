@@ -6,12 +6,10 @@ static final int BIRD_WIDTH = BIRD_LENGTH/2+1;
 static final boolean FOLLOW_LEADER = false;
 static float topSpeed = devMode ? 3: 10;
 static float acceleratorMultiplier = topSpeed*0.04; // how fast bird changes course towards mouse pointer. Low (0.01) looks like bees. 0.04 kind of like starlings
-static float avoidanceEagerness = -0.1; // high (1) is nice for lots of small birds. -0.1 seems natural.
+static float avoidanceEagerness = 0.1; // high (1) is nice for lots of small birds. -0.1 seems natural.
 static float flyingDistance = BIRD_LENGTH*3;
 
 static final int textSize = 10;
-//DecimalFormat df = new DecimalFormat("#.#");
-
 
 private static final int BIRD_AMOUNT = 1000;
 List<Bird> birds;
@@ -33,7 +31,6 @@ void setup() {
 
   image = loadImage("london-skyline[marytaughtme.files.wordpress.com].jpg");
   textSize(textSize);
-  //df.setRoundingMode(RoundingMode.CEILING);
 
   birds = new ArrayList<Bird>();
   Bird bird = new Bird(width/2 - 20, height/2 - 20, birds, true); // leader  
@@ -42,10 +39,10 @@ void setup() {
   //birds.add(bird);
 
   // First dash of birds
-  //for (int i=0; i<10; i++) {
-  //  bird = new Bird(random(width/3, width/2*3), random(height/3, height/2*3), birds);
-  //    birds.add(bird);  
-  //}
+  for (int i=0; i<10; i++) {
+   bird = new Bird(random(width/3, width/2*3), random(height/3, height/2*3), birds);
+     birds.add(bird);  
+  }
 
   if (!devMode) {
     for (int i=0; i < sqrt(BIRD_AMOUNT); i++) {
@@ -63,6 +60,7 @@ void draw() {
   if (isRunning) {
     background(white);
     image(image, -3, height-image.height);
+    showNumbers();
 
     for (Bird b : birds) {
       b.update();
@@ -70,11 +68,7 @@ void draw() {
     }
   }
   surface.setTitle("Birds      " + int(frameRate) + " fps");
-  fill(grey);
-  text("Speed: " + topSpeed, 310, height-textSize);
-  text("DirChange: " + roundOff(acceleratorMultiplier), 385, height-textSize);
-  text("Avoidance: " + roundOff(avoidanceEagerness), 470, height-textSize);
-  text("Distance: " + roundOff(flyingDistance), 560, height-textSize);
+  
 }
 
 private double roundOff(double value) {
@@ -120,4 +114,12 @@ void keyPressed() {
     flyingDistance -= 5;
     break;
   }
+}
+
+private void showNumbers() {
+  fill(grey);
+  text("Speed: " + topSpeed, 310, height-textSize);
+  text("DirChange: " + roundOff(acceleratorMultiplier), 385, height-textSize);
+  text("Avoidance: " + roundOff(avoidanceEagerness), 470, height-textSize);
+  text("Distance: " + roundOff(flyingDistance), 560, height-textSize);
 }

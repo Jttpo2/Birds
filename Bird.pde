@@ -152,7 +152,7 @@ class Bird {
     if (isHeadingFor(that)) {    
       PVector toBird = PVector.sub(that.pos, this.pos);
       toBird.normalize();
-      toBird.mult(avoidanceEagerness);
+      toBird.mult(-avoidanceEagerness);
       vel.add(toBird);
 
       // float distance = toBird.mag();
