@@ -1,15 +1,15 @@
 import java.util.List;
-static final boolean devMode = false;
+private boolean createAllAtonce = false;
 private boolean isRunning = true;
 private boolean followMouse = false;
 
 final int BIRD_AMOUNT = 600;
 final int FLOCK_AMOUNT = 10;
 
-static final int BIRD_LENGTH = devMode ? 100 : 8;
+static final int BIRD_LENGTH = 8;
 static final int BIRD_WIDTH = BIRD_LENGTH/2+1;
 static final boolean FOLLOW_LEADER = false;
-static float topSpeed = devMode ? 3: 7;
+static float topSpeed = 7;
 static float acceleratorMultiplier = topSpeed*0.07; // how fast bird changes course towards mouse pointer. Low (0.01) looks like bees. 0.04 kind of like starlings
 static float avoidanceEagerness = 0.8; // low (-1) is nice for lots of small birds. 0.1 seems natural.
 static float flyingDistance = BIRD_LENGTH*3;
@@ -22,6 +22,9 @@ final color white = color(255, 255, 255);
 final color black = color(0, 0, 0);
 final color grey  = color(150, 150, 150);
 final int[] hues = {210, 80, 30, 100, 120, 150, 250, 180, 200, 10, 50, 160, 230, 20, 40, 60, 70, 90, 110, 130, 140, 170, 190, 220, 240};
+
+final long CREATION_INTERVAL = 1000*10;
+long lastCreationTime = millis();
 
 PImage bgImage;
 
@@ -37,8 +40,12 @@ void setup() {
   textSize(textSize);
 
   flocks = new ArrayList<Flock>();
-  for (int i=0; i<FLOCK_AMOUNT; i++) {
+  if (createAllAtonce) {
+    for (int i=0; i<FLOCK_AMOUNT; i++) {
     // flocks.add(new Flock(BIRD_AMOUNT/FLOCK_AMOUNT, hues[i]));
+      deployNewFlock();
+    }  
+  } else {
     deployNewFlock();
   }
 }
@@ -48,6 +55,13 @@ void draw() {
     background(white);
     image(bgImage, -3, height-bgImage.height);
     showNumbers();
+
+    if (!createAllAtonce) {
+      if (lastCreationTime + CREATION_INTERVAL < millis()) {
+        deployNewFlock();
+        lastCreationTime = millis();
+      } 
+    }
 
     for (Flock f: flocks) {
       f.update();
@@ -98,14 +112,22 @@ void keyPressed() {
     case 'V': 
     flyingDistance -= 5;
     break;
-    case ' ': isRunning = !isRunning;
+    case ' ': deployNewFlock(); 
+    break;
+    case 'p':
+    case 'P': isRunning = !isRunning;
     break;
   }
 
   if ('1' <= key && key <= '9') {
     int num = key - '0';
-    Flock flock = flocks.get(num);
-    flock.toggleFollowMouse();
+    num--;
+    if (num < flocks.size()) {
+      Flock flock = flocks.get(num);
+      flock.toggleFollowMouse();
+    }
+  } else if (keyCode == BACKSPACE) {
+    removeLastFlock();
   }
 }
 
@@ -122,7 +144,12 @@ private void showNumbers() {
 private void deployNewFlock() {
   if (flocks.size() <= FLOCK_AMOUNT && flocks.size() <= hues.length) {
     flocks.add(new Flock(BIRD_AMOUNT/FLOCK_AMOUNT, hues[flocks.size()]));
+    lastCreationTime = millis();
   }
+}
+
+private void removeLastFlock() {
+  flocks.remove(flocks.size()-1);
 }
 
 private void toggleMouseControl() {
