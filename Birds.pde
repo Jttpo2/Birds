@@ -4,7 +4,7 @@ private boolean isRunning = true;
 private boolean followMouse = false;
 
 final int BIRD_AMOUNT = 600;
-final int FLOCK_AMOUNT = 10;
+final int FLOCK_AMOUNT = 5;
 
 static final int BIRD_LENGTH = 8;
 static final int BIRD_WIDTH = BIRD_LENGTH/2+1;
@@ -143,7 +143,7 @@ private void showNumbers() {
 
 private void deployNewFlock() {
   if (flocks.size() <= FLOCK_AMOUNT && flocks.size() <= hues.length) {
-    flocks.add(new Flock(BIRD_AMOUNT/FLOCK_AMOUNT, hues[flocks.size()]));
+    flocks.add(new Flock(BIRD_AMOUNT/FLOCK_AMOUNT, hues[flocks.size()], followMouse));
     lastCreationTime = millis();
   }
 }
