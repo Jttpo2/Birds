@@ -1,5 +1,5 @@
 class Bird {
-  private static final int BIRD_LENGTH = 5;
+  private static final int BIRD_LENGTH = 8;
   private static final int BIRD_WIDTH = BIRD_LENGTH/2+1;
 
   private static final float MAX_COURSE_CHANGE = PI/60;
@@ -8,7 +8,9 @@ class Bird {
   private static final boolean FOLLOW_LEADER = false;
 
   float topSpeed = 10;
-  float acceleratorMultiplier = 0.8; // seems to be a grouping measure
+  // float topSpeed = 2;
+  float acceleratorMultiplier = 0.8; // how fast bird changes course towards mouse pointer
+  float avoidingEagerness = 0.8;
 
   PVector pos;
   PVector vel;
@@ -151,8 +153,15 @@ class Bird {
     if (isHeadingFor(that)) {    
       PVector toBird = PVector.sub(that.pos, this.pos);
       toBird.normalize();
-      toBird.mult(-1);
+      toBird.mult(avoidingEagerness);
       vel.add(toBird);
+
+      // float distance = toBird.mag();
+      // float newCourse = atan((FLYING_DISTANCE+1)/ distance);
+      // PVector newC = PVector.fromAngle(newCourse);
+      // newC.normalize();
+      // newC.mult(1);
+      // vel.add(newC);
     }
   }
 
