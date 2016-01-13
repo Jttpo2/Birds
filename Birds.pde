@@ -14,10 +14,10 @@ color grey  = color(150, 150, 150);
 PImage image;
 
 void setup() {
-  size(925, 750);
+  size(925, 750, P3D);
   background(grey);
   //frameRate(1);
-  frameRate(55);
+  frameRate(30);
   colorMode(HSB, 255, 255, 255);
 
   image = loadImage("london-skyline[marytaughtme.files.wordpress.com].jpg");
@@ -25,7 +25,7 @@ void setup() {
   birds = new ArrayList<Bird>();
   Bird bird = new Bird(width/2 - 20, height/2 - 20, birds, true); // leader  
   birds.add(bird);
-  bird = new Bird(width/2 + 20, height/2 + 20, birds);
+  //bird = new Bird(width/2 + 20, height/2 + 20, birds);
   //birds.add(bird);
   
   // First dash of birds
@@ -56,6 +56,7 @@ void draw() {
       b.display();
     }  
   }
+  surface.setTitle("Birds      " + int(frameRate) + " fps");
 }
 void keyPressed() {
     println("Key pressed");

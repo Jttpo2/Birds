@@ -1,5 +1,5 @@
 class Bird {
-  private static final int BIRD_LENGTH = devMode ? 50 : 5;
+  private static final int BIRD_LENGTH = devMode ? 100 : 5;
   private static final int BIRD_WIDTH = BIRD_LENGTH/2+1;
 
   private static final float MAX_COURSE_CHANGE = PI/60;
@@ -16,7 +16,8 @@ class Bird {
   PVector vel;
   PVector acc;
 
-  Triangle triangle;
+  PShape tri;
+  color col;
 
   boolean isLeader = false;
   List<Bird> otherBirds;
@@ -33,11 +34,14 @@ class Bird {
     // color col = black;
     // color col = color(50, random(0, 255), 30);
     // color col = color(random(0, 40));
-    color col = color(random(240,255), 255, 255);
+    col = color(random(240,255), 255, 255);
 
-    triangle = new Triangle((int) pos.x, (int) pos.y, BIRD_WIDTH, BIRD_LENGTH, vel, col);
+    tri = createTriangle();
+    tri.translate(pos.x, pos.y);
+
     this.otherBirds = otherBirds;
     this.isLeader = isLeader;
+
   }
 
   public Bird(float x, float y, List<Bird> otherBirds) {
@@ -71,8 +75,6 @@ class Bird {
     } else {
       checkIfOnscreen();
     }
-    triangle.moveTo((int) pos.x, (int) pos.y);
-    triangle.setAngle(vel);
   }
 
   // Change course as much as possible towards desired direction
@@ -97,6 +99,7 @@ class Bird {
     } else if (pos.x < 0) {
       pos.x = width;
     }
+    // Do not overlap vertically
     // if (pos.y > height) {
     //   pos.y = 0;
     // } else if (pos.y < 0) {
@@ -105,7 +108,15 @@ class Bird {
   }
 
   public void display() {
-    triangle.display();
+    pushMatrix();
+    tri.resetMatrix();
+    tri.rotate(vel.heading()); 
+    translate(pos.x, pos.y);
+    shape(tri);    
+    popMatrix();
+
+    // fill(grey);
+    // rect(pos.x, pos.y, 2, 2);
   }
 
   private float getDirectionTo(Bird that) {
@@ -188,5 +199,12 @@ class Bird {
       0 < pos.y && pos.y < height) {
       hasEnteredScreen = true;
     }
+  }
+
+  private PShape createTriangle() {  
+    PShape triangle = createShape(TRIANGLE, BIRD_LENGTH/2, 0, -BIRD_LENGTH/2, -BIRD_WIDTH/2, -BIRD_LENGTH/2, BIRD_WIDTH/2); // Pointing left
+    triangle.setFill(col);
+    triangle.setStroke(false);
+    return triangle;
   }
 }
