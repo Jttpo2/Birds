@@ -1,17 +1,5 @@
 class Bird {
-  private static final int BIRD_LENGTH = devMode ? 100 : 5;
-  private static final int BIRD_WIDTH = BIRD_LENGTH/2+1;
-
-  private static final float MAX_COURSE_CHANGE = PI/60;
-  private static final float FLYING_DISTANCE = BIRD_LENGTH*3;
-
-  private static final boolean FOLLOW_LEADER = false;
-
-  float topSpeed = devMode ? 3: 10;
-  // float topSpeed = 2;
-  float acceleratorMultiplier = topSpeed*0.04; // how fast bird changes course towards mouse pointer. Low (0.01) looks like bees. 0.04 kind of like starlings
-  float avoidingEagerness = -0.1; // high (1) is nice for lots of small birds. -0.1 seems natural.
-
+  
   PVector pos;
   PVector vel;
   PVector acc;
@@ -154,7 +142,7 @@ class Bird {
     if (closest == null) {
       return;
     }
-    if (getDistanceTo(closest) <= FLYING_DISTANCE) {
+    if (getDistanceTo(closest) <= flyingDistance) {
       avoid(closest);  
       // println("Avoiding");
     }
@@ -164,11 +152,11 @@ class Bird {
     if (isHeadingFor(that)) {    
       PVector toBird = PVector.sub(that.pos, this.pos);
       toBird.normalize();
-      toBird.mult(avoidingEagerness);
+      toBird.mult(avoidanceEagerness);
       vel.add(toBird);
 
       // float distance = toBird.mag();
-      // float newCourse = atan((FLYING_DISTANCE+1)/ distance);
+      // float newCourse = atan((flyingDistance+1)/ distance);
       // PVector newC = PVector.fromAngle(newCourse);
       // newC.normalize();
       // newC.mult(1);
