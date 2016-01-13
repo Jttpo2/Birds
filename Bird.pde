@@ -10,7 +10,7 @@ class Bird {
   float topSpeed = 10;
   // float topSpeed = 2;
   float acceleratorMultiplier = 0.8; // how fast bird changes course towards mouse pointer
-  float avoidingEagerness = 0.8;
+  float avoidingEagerness = 1;
 
   PVector pos;
   PVector vel;
