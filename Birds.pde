@@ -1,4 +1,4 @@
-import java.util.List;
+
 private boolean createAllAtonce = false;
 private boolean isRunning = true;
 private boolean followMouse = false;
@@ -16,7 +16,7 @@ static float flyingDistance = BIRD_LENGTH*3;
 
 static final int textSize = 10;
 
-List<Flock> flocks;
+ArrayList<Flock> flocks;
 
 final color white = color(255, 255, 255);
 final color black = color(0, 0, 0);
@@ -29,8 +29,8 @@ long lastCreationTime = millis();
 PImage bgImage;
 
 void setup() {
-  // fullScreen(P2D);
-  size(925, 750, P2D);  
+  fullScreen(P2D);
+  // size(925, 750, P2D);  
   //frameRate(1);
   frameRate(40);
   colorMode(HSB, 255, 255, 255);

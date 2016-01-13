@@ -8,13 +8,13 @@ class Bird {
   color col;
 
   boolean isLeader = false;
-  List<Bird> otherBirds;
+  ArrayList<Bird> otherBirds;
   Bird leader;
 
   // for dramatic entrance
   boolean hasEnteredScreen = false;
  
-  public Bird(float x, float y, List<Bird> otherBirds, color col, boolean isLeader) {
+  public Bird(float x, float y, ArrayList<Bird> otherBirds, color col, boolean isLeader) {
    pos = new PVector(x, y);
    vel = PVector.fromAngle(3*PI/2);
    vel.mult(1);
@@ -29,11 +29,11 @@ class Bird {
    this.isLeader = isLeader;
  }
 
-   public Bird(float x, float y, List<Bird> otherBirds, color col) {
+   public Bird(float x, float y, ArrayList<Bird> otherBirds, color col) {
     this(x, y, otherBirds, col, false);
   }  
 
-  public Bird(float x, float y, List<Bird> otherBirds) {
+  public Bird(float x, float y, ArrayList<Bird> otherBirds) {
    this(x, y, otherBirds, black, false);
   }
 

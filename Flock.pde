@@ -1,7 +1,7 @@
 public class Flock {
 	private PVector pos;
 	private color baseColor;
-	private List<Bird> birds;
+	private ArrayList<Bird> birds;
 
 	private boolean followMouse;
 
