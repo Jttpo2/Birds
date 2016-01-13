@@ -1,7 +1,9 @@
 import java.util.List;
 
-List<Bird> birds;
+static final boolean devMode = false;
+
 private static final int BIRD_AMOUNT = 1000;
+List<Bird> birds;
 
 private boolean isRunning = true;
 
@@ -18,21 +20,21 @@ void setup() {
   frameRate(55);
   colorMode(HSB, 255, 255, 255);
 
-
   image = loadImage("london-skyline[marytaughtme.files.wordpress.com].jpg");
 
   birds = new ArrayList<Bird>();
   Bird bird = new Bird(width/2 - 20, height/2 - 20, birds, true); // leader  
   birds.add(bird);
   bird = new Bird(width/2 + 20, height/2 + 20, birds);
-  birds.add(bird);
+  //birds.add(bird);
   
   // First dash of birds
-  for (int i=0; i<10; i++) {
-    bird = new Bird(random(width/3, width/2*3), random(height/3, height/2*3), birds);
-      birds.add(bird);  
-  }
+  //for (int i=0; i<10; i++) {
+  //  bird = new Bird(random(width/3, width/2*3), random(height/3, height/2*3), birds);
+  //    birds.add(bird);  
+  //}
   
+  if (!devMode) {
   for (int i=0; i < sqrt(BIRD_AMOUNT); i++) {
     for (int j=0; j < sqrt(BIRD_AMOUNT); j++) {
       float x = (width/2/sqrt(BIRD_AMOUNT))*i - width;
@@ -40,6 +42,7 @@ void setup() {
       bird = new Bird(x, y, birds);
       birds.add(bird);   
     }
+  }
   }
 }
 

@@ -1,5 +1,5 @@
 class Bird {
-  private static final int BIRD_LENGTH = 8;
+  private static final int BIRD_LENGTH = devMode ? 50 : 5;
   private static final int BIRD_WIDTH = BIRD_LENGTH/2+1;
 
   private static final float MAX_COURSE_CHANGE = PI/60;
@@ -7,10 +7,10 @@ class Bird {
 
   private static final boolean FOLLOW_LEADER = false;
 
-  float topSpeed = 10;
+  float topSpeed = devMode ? 3: 10;
   // float topSpeed = 2;
-  float acceleratorMultiplier = 0.8; // how fast bird changes course towards mouse pointer
-  float avoidingEagerness = 1;
+  float acceleratorMultiplier = topSpeed*0.01; // how fast bird changes course towards mouse pointer
+  float avoidingEagerness = -0.1; // high (1) is nice for lots of small birds. -0.1 seems natural.
 
   PVector pos;
   PVector vel;
