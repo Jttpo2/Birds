@@ -9,7 +9,7 @@ class Bird {
 
   float topSpeed = devMode ? 3: 10;
   // float topSpeed = 2;
-  float acceleratorMultiplier = topSpeed*0.01; // how fast bird changes course towards mouse pointer
+  float acceleratorMultiplier = topSpeed*0.04; // how fast bird changes course towards mouse pointer. Low (0.01) looks like bees. 0.04 kind of like starlings
   float avoidingEagerness = -0.1; // high (1) is nice for lots of small birds. -0.1 seems natural.
 
   PVector pos;
