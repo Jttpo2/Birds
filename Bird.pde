@@ -14,49 +14,42 @@ class Bird {
   // for dramatic entrance
   boolean hasEnteredScreen = false;
  
-  public Bird(float x, float y, List<Bird> otherBirds, boolean isLeader) {
-    pos = new PVector(x, y);
-    vel = PVector.fromAngle(3*PI/2);
-    vel.mult(1);
+  public Bird(float x, float y, List<Bird> otherBirds, color col, boolean isLeader) {
+   pos = new PVector(x, y);
+   vel = PVector.fromAngle(3*PI/2);
+   vel.mult(1);
 
-    // color col = black;
-    // color col = color(50, random(0, 255), 30);
-    // color col = color(random(0, 40));
-    col = color(random(240,255), 255, 255);
 
-    tri = createTriangle();
-    tri.translate(pos.x, pos.y);
+   this.col = col;
 
-    this.otherBirds = otherBirds;
-    this.isLeader = isLeader;
+   tri = createTriangle();
+   tri.translate(pos.x, pos.y);
 
-  }
+   this.otherBirds = otherBirds;
+   this.isLeader = isLeader;
+ }
+
+   public Bird(float x, float y, List<Bird> otherBirds, color col) {
+    this(x, y, otherBirds, col, false);
+  }  
 
   public Bird(float x, float y, List<Bird> otherBirds) {
-    this(x, y, otherBirds, false);
+   this(x, y, otherBirds, black, false);
   }
 
-  public void update(int targetX, int targetY) {  
-    PVector target; 
-    if (FOLLOW_LEADER) {
-      if (isLeader) {
-        target = new PVector(targetX, targetY);
-      } else {
-        Bird l = getLeader();
-        if (l != null) {
-          target = l.pos;
-        } else {
-          target = new PVector(targetX, targetY);
-        }
-      }
-    } else {
-      target = new PVector(targetX, targetY);
-    } 
-      
-    aimFor(target);
-      
-    avoidCollision();
+  public void update(PVector target) {  
     
+    if (FOLLOW_LEADER && !isLeader) {
+      Bird leader = getLeader();
+      if (leader != null) {
+        target = leader.pos;
+      } 
+    } 
+
+    aimFor(target);
+
+    avoidCollision();
+
     updatePos();
     if (hasEnteredScreen) {
       repositionIfOutside();  
@@ -72,7 +65,6 @@ class Bird {
     toTarget.mult(acceleratorMultiplier);
     acc = toTarget;
     vel.add(acc);
-    
     vel.limit(topSpeed);
   }
 
@@ -154,6 +146,7 @@ class Bird {
       toBird.normalize();
       toBird.mult(-avoidanceEagerness);
       vel.add(toBird);
+      vel.limit(topSpeed);
 
       // float distance = toBird.mag();
       // float newCourse = atan((flyingDistance+1)/ distance);

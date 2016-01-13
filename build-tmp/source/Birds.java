@@ -18,26 +18,30 @@ public class Birds extends PApplet {
 
 
 static final boolean devMode = false;
+private boolean isRunning = true;
+private boolean followMouse = false;
+
+final int BIRD_AMOUNT = 600;
+final int FLOCK_AMOUNT = 10;
 
 static final int BIRD_LENGTH = devMode ? 100 : 8;
 static final int BIRD_WIDTH = BIRD_LENGTH/2+1;
 static final boolean FOLLOW_LEADER = false;
-static float topSpeed = devMode ? 3: 10.5f;
+static float topSpeed = devMode ? 3: 7;
 static float acceleratorMultiplier = topSpeed*0.07f; // how fast bird changes course towards mouse pointer. Low (0.01) looks like bees. 0.04 kind of like starlings
 static float avoidanceEagerness = 0.8f; // low (-1) is nice for lots of small birds. 0.1 seems natural.
 static float flyingDistance = BIRD_LENGTH*3;
 
 static final int textSize = 10;
 
-Flock flock;
+List<Flock> flocks;
 
-private boolean isRunning = true;
+final int white = color(255, 255, 255);
+final int black = color(0, 0, 0);
+final int grey  = color(150, 150, 150);
+final int[] hues = {210, 80, 30, 100, 120, 150, 250, 180, 200, 10, 50, 160, 230, 20, 40, 60, 70, 90, 110, 130, 140, 170, 190, 220, 240};
 
-int white = color(255, 255, 255);
-int black = color(0, 0, 0);
-int grey  = color(150, 150, 150);
-
-PImage image;
+PImage bgImage;
 
 public void setup() {
   // fullScreen(P2D);
@@ -46,21 +50,27 @@ public void setup() {
   frameRate(40);
   colorMode(HSB, 255, 255, 255);
 
-  image = loadImage("london-skyline[marytaughtme.files.wordpress.com].jpg");
-  image.resize(width+3,0);
+  bgImage = loadImage("london-skyline[marytaughtme.files.wordpress.com].jpg");
+  bgImage.resize(width+3,0);
   textSize(textSize);
 
-  flock = new Flock(10);
+  flocks = new ArrayList<Flock>();
+  for (int i=0; i<FLOCK_AMOUNT; i++) {
+    // flocks.add(new Flock(BIRD_AMOUNT/FLOCK_AMOUNT, hues[i]));
+    deployNewFlock();
+  }
 }
 
 public void draw() {
   if (isRunning) {
     background(white);
-    image(image, -3, height-image.height);
+    image(bgImage, -3, height-bgImage.height);
     showNumbers();
 
-    flock.update();
-    flock.display();
+    for (Flock f: flocks) {
+      f.update();
+      f.display();
+    }
   }
 }
 
@@ -69,43 +79,51 @@ private double roundOff(double value) {
 }
 
 public void mousePressed() {
-  isRunning = !isRunning;
+  toggleMouseControl();
 }
 
 public void keyPressed() {
-  switch (keyCode) {
-  case 'a':
-  case 'A': 
+  switch (key) {
+    case 'a':
+    case 'A': 
     topSpeed += 0.5f;
     break;
-  case 'z':
-  case 'Z': 
+    case 'z':
+    case 'Z': 
     topSpeed -= 0.5f;
     break;
-  case 's': 
-  case 'S': 
+    case 's': 
+    case 'S': 
     acceleratorMultiplier += 0.05f;
     break;
-  case 'x':
-  case 'X': 
+    case 'x':
+    case 'X': 
     acceleratorMultiplier -= 0.05f;
     break;
-  case 'd':
-  case 'D': 
+    case 'd':
+    case 'D': 
     avoidanceEagerness += 0.05f;
     break;
-  case 'c': 
-  case 'C': 
+    case 'c': 
+    case 'C': 
     avoidanceEagerness -= 0.05f;
     break;
-  case 'f':
-  case 'F': 
+    case 'f':
+    case 'F': 
     flyingDistance += 5;
     break;
-  case 'v': 
-  case 'V': 
+    case 'v': 
+    case 'V': 
     flyingDistance -= 5;
     break;
+    case ' ': isRunning = !isRunning;
+    break;
+  }
+
+  if ('1' <= key && key <= '9') {
+    int num = key - '0';
+    Flock flock = flocks.get(num);
+    flock.toggleFollowMouse();
   }
 }
 
@@ -117,6 +135,19 @@ private void showNumbers() {
   text("Avoidance: " + roundOff(avoidanceEagerness), initDistance+160, height-textSize);
   text("Distance: " + roundOff(flyingDistance), initDistance+250, height-textSize);
   text(PApplet.parseInt(frameRate) + " fps", width-50, height-textSize); 
+}
+
+private void deployNewFlock() {
+  if (flocks.size() <= FLOCK_AMOUNT && flocks.size() <= hues.length) {
+    flocks.add(new Flock(BIRD_AMOUNT/FLOCK_AMOUNT, hues[flocks.size()]));
+  }
+}
+
+private void toggleMouseControl() {
+  for (Flock f: flocks) {
+    f.setFollowMouse(!followMouse);
+  }
+  followMouse = !followMouse;
 }
 class Bird {
   
@@ -134,49 +165,42 @@ class Bird {
   // for dramatic entrance
   boolean hasEnteredScreen = false;
  
-  public Bird(float x, float y, List<Bird> otherBirds, boolean isLeader) {
-    pos = new PVector(x, y);
-    vel = PVector.fromAngle(3*PI/2);
-    vel.mult(1);
+  public Bird(float x, float y, List<Bird> otherBirds, int col, boolean isLeader) {
+   pos = new PVector(x, y);
+   vel = PVector.fromAngle(3*PI/2);
+   vel.mult(1);
 
-    // color col = black;
-    // color col = color(50, random(0, 255), 30);
-    // color col = color(random(0, 40));
-    col = color(random(240,255), 255, 255);
 
-    tri = createTriangle();
-    tri.translate(pos.x, pos.y);
+   this.col = col;
 
-    this.otherBirds = otherBirds;
-    this.isLeader = isLeader;
+   tri = createTriangle();
+   tri.translate(pos.x, pos.y);
 
-  }
+   this.otherBirds = otherBirds;
+   this.isLeader = isLeader;
+ }
+
+   public Bird(float x, float y, List<Bird> otherBirds, int col) {
+    this(x, y, otherBirds, col, false);
+  }  
 
   public Bird(float x, float y, List<Bird> otherBirds) {
-    this(x, y, otherBirds, false);
+   this(x, y, otherBirds, black, false);
   }
 
-  public void update(int targetX, int targetY) {  
-    PVector target; 
-    if (FOLLOW_LEADER) {
-      if (isLeader) {
-        target = new PVector(targetX, targetY);
-      } else {
-        Bird l = getLeader();
-        if (l != null) {
-          target = l.pos;
-        } else {
-          target = new PVector(targetX, targetY);
-        }
-      }
-    } else {
-      target = new PVector(targetX, targetY);
-    } 
-      
-    aimFor(target);
-      
-    avoidCollision();
+  public void update(PVector target) {  
     
+    if (FOLLOW_LEADER && !isLeader) {
+      Bird leader = getLeader();
+      if (leader != null) {
+        target = leader.pos;
+      } 
+    } 
+
+    aimFor(target);
+
+    avoidCollision();
+
     updatePos();
     if (hasEnteredScreen) {
       repositionIfOutside();  
@@ -192,7 +216,6 @@ class Bird {
     toTarget.mult(acceleratorMultiplier);
     acc = toTarget;
     vel.add(acc);
-    
     vel.limit(topSpeed);
   }
 
@@ -274,6 +297,7 @@ class Bird {
       toBird.normalize();
       toBird.mult(-avoidanceEagerness);
       vel.add(toBird);
+      vel.limit(topSpeed);
 
       // float distance = toBird.mag();
       // float newCourse = atan((flyingDistance+1)/ distance);
@@ -318,15 +342,20 @@ class Bird {
 }
 public class Flock {
 	private PVector pos;
-	private PVector vel;
 	private int baseColor;
 	private List<Bird> birds;
 
-	private boolean followMouse = true;
+	private boolean followMouse;
 
-	public Flock(int size) {
+	private float xNoiseOffset = random(0, 10000);
+	private float yNoiseOffset = random(0, 10000);
+
+	public Flock(int size, int baseHue, boolean followMouse) {
 		birds = new ArrayList<Bird>();
 		Bird bird;
+		pos = new PVector(random(0, width), height);
+		this.followMouse = followMouse;
+		baseColor = color(random(baseHue-10, baseHue+10), 255, 255);
 
 		// for (int i=0; i < sqrt(size); i++) {
 		// 	for (int j=0; j < sqrt(size); j++) {
@@ -338,25 +367,54 @@ public class Flock {
 
 		// First dash of birds
 		for (int i=0; i<size; i++) {
-			bird = new Bird(random(width/3, width/2*3), random(height/3, height/2*3), birds);
+			// bird = new Bird(random(width/3, width/2*3), random(height/3, height/2*3), birds, baseColor);
+			bird = new Bird(pos.x, pos.y, birds, baseColor);
 			birds.add(bird);  
 		}
+
+		// Perlin noise config.
+		int octaves = 2;
+		float falloff = 0.9f;
+		noiseDetail(octaves, falloff);
+	}
+
+	public Flock(int size, int col) {
+		this(size, col, false);
+	}
+
+	public Flock(int size) {
+		this(size, black);
 	}
 
 	public void update() {
-		int targetX;
-		int targetY;
 		if (followMouse) {
-			targetX = mouseX;
-			targetY = mouseY;
+			pos = new PVector(mouseX, mouseY);
 		} else {
-			targetX = 0;
-			targetY = 0;
+			float noiseX = noise(xNoiseOffset);
+			float noiseY = noise(yNoiseOffset);
+			int x = (int) map(noiseX, 0, 1, 0, width);
+			int y = (int) map(noiseY, 0, 1, 0, height);
+			pos = new PVector(x, y);
+
+			xNoiseOffset += 0.01f;
+			yNoiseOffset += 0.01f;
+			
+			// fill(black);
+			// rectMode(CENTER);
+			// rect(x, y, 10, 10);
 		}
 		for (Bird b : birds) {
-			b.update(targetX, targetY);
+			b.update(pos);
 		}
 
+	}
+
+	public void setFollowMouse(boolean state) {
+		followMouse = state;
+	}
+
+	public void toggleFollowMouse() {
+		setFollowMouse(!followMouse);
 	}
 
 	public void display() {
