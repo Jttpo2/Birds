@@ -1,17 +1,17 @@
 import java.util.List;
 static final boolean devMode = false;
 
-static final int BIRD_LENGTH = devMode ? 100 : 5;
+static final int BIRD_LENGTH = devMode ? 100 : 8;
 static final int BIRD_WIDTH = BIRD_LENGTH/2+1;
 static final boolean FOLLOW_LEADER = false;
-static float topSpeed = devMode ? 3: 12;
-static float acceleratorMultiplier = topSpeed*0.08; // how fast bird changes course towards mouse pointer. Low (0.01) looks like bees. 0.04 kind of like starlings
+static float topSpeed = devMode ? 3: 10.5;
+static float acceleratorMultiplier = topSpeed*0.07; // how fast bird changes course towards mouse pointer. Low (0.01) looks like bees. 0.04 kind of like starlings
 static float avoidanceEagerness = 0.8; // low (-1) is nice for lots of small birds. 0.1 seems natural.
 static float flyingDistance = BIRD_LENGTH*3;
 
 static final int textSize = 10;
 
-private static final int BIRD_AMOUNT = 1000;
+private static final int BIRD_AMOUNT = 650;
 List<Bird> birds;
 
 private boolean isRunning = true;
@@ -24,9 +24,9 @@ PImage image;
 
 void setup() {
   //size(925, 750, P3D);
-  fullScreen();
+  fullScreen(P2D);
   //frameRate(1);
-  frameRate(25);
+  frameRate(40);
   colorMode(HSB, 255, 255, 255);
 
   image = loadImage("london-skyline[marytaughtme.files.wordpress.com].jpg");
