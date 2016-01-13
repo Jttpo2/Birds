@@ -5,8 +5,8 @@ static final int BIRD_LENGTH = devMode ? 100 : 5;
 static final int BIRD_WIDTH = BIRD_LENGTH/2+1;
 static final boolean FOLLOW_LEADER = false;
 static float topSpeed = devMode ? 3: 10;
-static float acceleratorMultiplier = topSpeed*0.04; // how fast bird changes course towards mouse pointer. Low (0.01) looks like bees. 0.04 kind of like starlings
-static float avoidanceEagerness = 0.1; // high (1) is nice for lots of small birds. -0.1 seems natural.
+static float acceleratorMultiplier = topSpeed*0.08; // how fast bird changes course towards mouse pointer. Low (0.01) looks like bees. 0.04 kind of like starlings
+static float avoidanceEagerness = 0.8; // low (-1) is nice for lots of small birds. 0.1 seems natural.
 static float flyingDistance = BIRD_LENGTH*3;
 
 static final int textSize = 10;
@@ -24,7 +24,6 @@ PImage image;
 
 void setup() {
   size(925, 750, P3D);
-  background(grey);
   //frameRate(1);
   frameRate(35);
   colorMode(HSB, 255, 255, 255);
@@ -67,8 +66,6 @@ void draw() {
       b.display();
     }
   }
-  surface.setTitle("Birds      " + int(frameRate) + " fps");
-  
 }
 
 private double roundOff(double value) {
@@ -122,4 +119,5 @@ private void showNumbers() {
   text("DirChange: " + roundOff(acceleratorMultiplier), 385, height-textSize);
   text("Avoidance: " + roundOff(avoidanceEagerness), 470, height-textSize);
   text("Distance: " + roundOff(flyingDistance), 560, height-textSize);
+  //text(int(frameRate) + " fps", width-50, height-textSize); 
 }
