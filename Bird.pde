@@ -62,6 +62,7 @@ class Bird {
   private void aimFor(PVector targetPos) {
     PVector toTarget = PVector.sub(targetPos, pos);    
     toTarget.normalize();
+    // toTarget.mult(-0.01);
     toTarget.mult(acceleratorMultiplier);
     acc = toTarget;
     vel.add(acc);
@@ -80,11 +81,11 @@ class Bird {
       pos.x = width;
     }
     // Do not overlap vertically
-    // if (pos.y > height) {
-    //   pos.y = 0;
-    // } else if (pos.y < 0) {
-    //   pos.y = height;
-    // }
+    if (pos.y > height) {
+      pos.y = 0;
+    } else if (pos.y < 0) {
+      pos.y = height;
+    }
   }
 
   public void display() {

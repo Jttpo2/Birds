@@ -1,10 +1,25 @@
 
+/* @pjs preload="london-skyline[marytaughtme.files.wordpress.com].jpg"; */ // Preloading file for web
+/*
+  Join flocks if in same area for enough time
+  Fly away from chasing predator. Predator visible, larger, faster and eats birds, making them disappear.
+  Reproduction algorithm spawning birds as they are eaten. 
+  Birds mating in the air. Popularity rating. 
+  Unfitness function, aging slows them down. Gets eaten. 
+  Slow birds congregate into own flock.
+  Stamina. Rest on structures when done. 
+  Gamify somehow. Earn points. Fly as many birds through loops. Loops have to be passed on time. Birds disappear with time. Birds represent time. 
+  Physics engine. Accelerating downwards and slowing going up.
+  Mass.
+  Attractor and repeller.
+*/
+
 private boolean createAllAtonce = false;
 private boolean isRunning = true;
 private boolean followMouse = false;
 
 final int BIRD_AMOUNT = 600;
-final int FLOCK_AMOUNT = 5;
+final int FLOCK_AMOUNT = 2;
 
 static final int BIRD_LENGTH = 8;
 static final int BIRD_WIDTH = BIRD_LENGTH/2+1;
@@ -142,7 +157,7 @@ private void showNumbers() {
 }
 
 private void deployNewFlock() {
-  if (flocks.size() <= FLOCK_AMOUNT && flocks.size() <= hues.length) {
+  if (flocks.size() < FLOCK_AMOUNT && flocks.size() <= hues.length) {
     flocks.add(new Flock(BIRD_AMOUNT/FLOCK_AMOUNT, hues[flocks.size()], followMouse));
     lastCreationTime = millis();
   }

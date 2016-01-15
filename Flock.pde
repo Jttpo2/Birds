@@ -1,4 +1,4 @@
-public class Flock {
+class Flock {
 	private PVector pos;
 	private color baseColor;
 	private ArrayList<Bird> birds;
