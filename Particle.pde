@@ -20,7 +20,7 @@ class Particle {
 	}
 
 	void update() {
-		vel.limit(topSpeed);
+		// vel.limit(topSpeed);
 		vel.add(acc);
 		pos.add(vel);
 		acc.mult(0); // clear acceleration
