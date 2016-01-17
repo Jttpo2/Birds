@@ -1,7 +1,6 @@
 class Flock extends ParticleSystem {
 	private PVector target;
 	private color baseColor;
-	// private ArrayList<Bird> birds;
 	private ArrayList<Particle> birds;
 
 	private boolean followMouse;
@@ -13,16 +12,13 @@ class Flock extends ParticleSystem {
 
 	public Flock(PVector origin, int size, int baseHue, boolean followMouse) {
 		super(origin);
-		// birds = new ArrayList<Bird>();
 		birds = particles;
 		
 		this.followMouse = followMouse;
 		baseColor = color(random(baseHue-10, baseHue+10), 255, 255);
 
 		Bird bird;
-		// First dash of birds
 		for (int i=0; i<size; i++) {
-			// bird = new Bird(random(width/3, width/2*3), random(height/3, height/2*3), birds, baseColor);
 			addBird();
 		}
 
@@ -61,11 +57,11 @@ class Flock extends ParticleSystem {
 			// rectMode(CENTER);
 			// rect(x, y, 10, 10);
 		}
-		
+
 		for (Particle b : birds) {
 			b.aimFor(target);
 		}
-
+		
 		super.run();
 	}
 
@@ -76,11 +72,4 @@ class Flock extends ParticleSystem {
 	public void toggleFollowMouse() {
 		setFollowMouse(!followMouse);
 	}
-
-	// public void display() {
-	// 	for (Particle b : birds) {
-	// 		b.display();
-	// 	}
-	// }
-
 }

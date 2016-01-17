@@ -66,7 +66,6 @@ void setup() {
   flocks = new ArrayList<Flock>();
   if (createAllAtonce) {
     for (int i=0; i<FLOCK_AMOUNT; i++) {
-    // flocks.add(new Flock(BIRD_AMOUNT/FLOCK_AMOUNT, hues[i]));
       deployNewFlock();
     }  
   } else {
@@ -91,9 +90,6 @@ void draw() {
       // f.applyForce(wind);
       // f.applyForce(gravity);
       f.run();
-
-      // f.update();
-      // f.display();
     }
   }
 }
@@ -170,8 +166,7 @@ private void showNumbers() {
 }
 
 private void deployNewFlock() {
-  // PVector pos = new PVector(random(0, width), height);
-  PVector pos = new PVector(100, 100);
+  PVector pos = new PVector(random(0, width), height);
   if (flocks.size() < FLOCK_AMOUNT && flocks.size() <= hues.length) {
     flocks.add(new Flock(pos, BIRD_AMOUNT/FLOCK_AMOUNT, hues[flocks.size()], followMouse));
     lastCreationTime = millis();

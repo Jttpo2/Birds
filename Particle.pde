@@ -33,7 +33,6 @@ class Particle {
 		fill(0);
 		ellipseMode(CENTER);
 		ellipse(pos.x, pos.y, radius, radius);
-
 	}
 
 	void run() {
@@ -42,8 +41,6 @@ class Particle {
 	}
 
 	void applyForce(PVector force) {
-		// PVector f = force.copy();
-		// f.div(mass);
 		PVector f = PVector.div(force, mass);
 		acc.add(force);
 	}
@@ -75,7 +72,6 @@ class Particle {
     }
     if (getDistanceTo(closest) <= flyingDistance) {
       avoid(closest);  
-      // println("Avoiding");
     }
   }
 
@@ -85,11 +81,6 @@ class Particle {
     toTarget.normalize();
     toTarget.mult(acceleratorMultiplier);
     applyForce(toTarget);
-
-
-    // acc = toTarget;
-    // vel.add(acc);
-    // vel.limit(topSpeed);
   }
 
   private void avoid(Particle that) {
@@ -99,13 +90,6 @@ class Particle {
       toParticle.mult(-avoidanceEagerness);
       vel.add(toParticle);
       vel.limit(topSpeed);
-
-      // float distance = toBird.mag();
-      // float newCourse = atan((flyingDistance+1)/ distance);
-      // PVector newC = PVector.fromAngle(newCourse);
-      // newC.normalize();
-      // newC.mult(1);
-      // vel.add(newC);
     }
   }
 
