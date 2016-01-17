@@ -45,6 +45,17 @@ class Particle {
 		acc.add(force);
 	}
 
+  void drag(Liquid l) {
+    float speed = vel.mag(); // Speed of object
+    float a = 1; // Frontal area of object
+    PVector drag = vel.copy().normalize(); // Velocity unit vector
+
+    float dragMagnitude = l.c * a * speed * speed;
+    drag.mult(-1);
+    drag.mult(dragMagnitude);
+    applyForce(drag);
+  }
+
 	boolean isDead() {
 		// return lifespan < 0;
 		return false;
@@ -89,7 +100,7 @@ class Particle {
       toParticle.normalize();
       toParticle.mult(-avoidanceEagerness);
       vel.add(toParticle);
-      vel.limit(topSpeed);
+      // vel.limit(topSpeed);
     }
   }
 

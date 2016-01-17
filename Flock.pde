@@ -60,6 +60,7 @@ class Flock extends ParticleSystem {
 
 		for (Particle b : birds) {
 			PVector gravity = new PVector(0, G*b.mass); // Gravitational pull dependent on mass
+			b.drag(AIR);
 			b.applyForce(gravity);
 			b.aimFor(target);
 		}

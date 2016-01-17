@@ -36,6 +36,7 @@ static float flyingDistance = BIRD_LENGTH*3;
 
 static final float G = 0.1;
 PVector wind = new PVector(0.2, 0);
+final Liquid AIR = new Liquid(0.005);
 
 static final int textSize = 10;
 
