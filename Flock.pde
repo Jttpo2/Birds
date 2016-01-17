@@ -1,36 +1,26 @@
 import java.util.Iterator;
 
-class Flock { // extends ParticleSystem {
-	private PVector origin;
-	private PVector target;
+class Flock extends Group { // extends ParticleSystem {
+	private static final float STANDARD_BIRD_MASS =1;
 	private color baseColor;
-	private ArrayList<ConsciousEntity> birds;
-
-	private boolean followMouse;
-
-	private float xNoiseOffset = random(0, 10000);
-	private float yNoiseOffset = random(0, 10000);
-
-	private final float STANDARD_MASS = 1;
 
 	public Flock(PVector origin, int size, int baseHue, boolean followMouse) {
-		// super(origin);]
-		this.origin = origin;
+		super(origin, size, followMouse);
+		// this.origin = origin;
 		// birds = particles;
-		birds = new ArrayList<ConsciousEntity>();
+		// birds = new ArrayList<ConsciousEntity>();
 		
-		this.followMouse = followMouse;
+		// this.followMouse = followMouse;
 		baseColor = color(random(baseHue-10, baseHue+10), 255, 255);
 
-		Bird bird;
 		for (int i=0; i<size; i++) {
 			addBird();
 		}
 
 		// Perlin noise config.
-		int octaves = 2;
-		float falloff = 0.9;
-		noiseDetail(octaves, falloff);
+		// int octaves = 2;
+		// float falloff = 0.9;
+		// noiseDetail(octaves, falloff);
 	}
 
 	public Flock(PVector origin, int size, color col) {
@@ -42,45 +32,42 @@ class Flock { // extends ParticleSystem {
 	}
 
 	public void addBird() {
-		birds.add(new Bird(STANDARD_MASS, origin, birds, baseColor));  
+		super.addEntity(new Bird(STANDARD_BIRD_MASS, origin, entities, baseColor));  
 	}
 
-	public void run() {
-		if (followMouse) {
-			target = new PVector(mouseX, mouseY);
-		} else {
-			float noiseX = noise(xNoiseOffset);
-			float noiseY = noise(yNoiseOffset);
-			int x = (int) map(noiseX, 0, 1, 0, width);
-			int y = (int) map(noiseY, 0, 1, 0, height);
-			target = new PVector(x, y);
+	// public void run() {
+	// 	if (followMouse) {
+	// 		target = new PVector(mouseX, mouseY);
+	// 	} else {
+	// 		float noiseX = noise(xNoiseOffset);
+	// 		float noiseY = noise(yNoiseOffset);
+	// 		int x = (int) map(noiseX, 0, 1, 0, width);
+	// 		int y = (int) map(noiseY, 0, 1, 0, height);
+	// 		target = new PVector(x, y);
 
-			xNoiseOffset += 0.01;
-			yNoiseOffset += 0.01;
+	// 		xNoiseOffset += 0.01;
+	// 		yNoiseOffset += 0.01;
 			
-			// fill(black);
-			// rectMode(CENTER);
-			// rect(x, y, 10, 10);
-		}
+	// 		// fill(black);
+	// 		// rectMode(CENTER);
+	// 		// rect(x, y, 10, 10);
+	// 	}
 
-		for (ConsciousEntity b : birds) {
-			PVector gravity = new PVector(0, G*b.mass); // Gravitational pull dependent on mass
-			b.drag(AIR);
-			b.applyForce(gravity);
-			b.aimFor(target);
-		}
+	// 	for (ConsciousEntity b : birds) {
+	// 		b.aimFor(target);
+	// 	}
 
-		// super.run();
-		superrun();
-	}
+	// 	// super.run();
+	// 	superrun();
+	// }
 
-	public void setFollowMouse(boolean state) {
-		followMouse = state;
-	}
+	// public void setFollowMouse(boolean state) {
+	// 	followMouse = state;
+	// }
 
-	public void toggleFollowMouse() {
-		setFollowMouse(!followMouse);
-	}
+	// public void toggleFollowMouse() {
+	// 	setFollowMouse(!followMouse);
+	// }
 
 	// *********** Should be in ParticleSystem ***********
 	// void addParticle() {
@@ -95,39 +82,46 @@ class Flock { // extends ParticleSystem {
 	// 	particles.remove(p);
 	// }
 
-	// ParticleSystem
-	void superrun() {
-		Iterator<ConsciousEntity> iter = birds.iterator();
-		while(iter.hasNext()) {
-			ConsciousEntity p = iter.next();
-			p.run();
-			if (p.isDead()) {
-				iter.remove();
-			}
-		}
-	}
+	// // ParticleSystem
+	// void superrun() {
+	// 	for (Particle p: birds) {
+	// 		p.drag(AIR);
+	// 		PVector gravity = new PVector(0, G*p.mass); // Gravitational pull dependent on mass
+	// 		p.applyForce(gravity);
+	// 		p.run();
+	// 	}
 
-	// ParticleSystem
-	void applyForce(PVector force) {
-		for (Particle p: birds) {
-			p.applyForce(force);
-			// TODO Apply gravitational force (gravity = new PVector(0,0.1); applyForce(gravity)) force in main
-		}
-	}
+	// 	// Iterator<Particle> iter = birds.iterator();
+	// 	// while(iter.hasNext()) {
+	// 	// 	Particle p = iter.next();
+	// 	// 	p.run();
+	// 	// 	if (p.isDead()) {
+	// 	// 		iter.remove();
+	// 	// 	}
+	// 	// }
+	// }
 
-	// ParticleSystem
-	void applyRepeller(Repeller r) {
-		for (Particle p: birds) {
-			PVector force = r.repel(p);
-			p.applyForce(force);
-		}
-	}
+	// // ParticleSystem
+	// void applyForce(PVector force) {
+	// 	for (Particle p: birds) {
+	// 		p.applyForce(force);
+	// 		// TODO Apply gravitational force (gravity = new PVector(0,0.1); applyForce(gravity)) force in main
+	// 	}
+	// }
 
-	// ParticleSystem
-	void applyAttractor(Attractor a) {
-		for (Particle p: birds) {
-			PVector force = a.attract(p);
-			p.applyForce(force);
-		}
-	}
+	// // ParticleSystem
+	// void applyRepeller(Repeller r) {
+	// 	for (Particle p: birds) {
+	// 		PVector force = r.repel(p);
+	// 		p.applyForce(force);
+	// 	}
+	// }
+
+	// // ParticleSystem
+	// void applyAttractor(Attractor a) {
+	// 	for (Particle p: birds) {
+	// 		PVector force = a.attract(p);
+	// 		p.applyForce(force);
+	// 	}
+	// }
 }
