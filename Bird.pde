@@ -1,28 +1,16 @@
-class Bird extends Particle {
-  // float mass;
-
-  // PVector pos;
-  // PVector vel;
-  // PVector acc;
-
+class Bird extends ConsciousEntity {
   PShape tri;
   color col;
 
   boolean isLeader = false;
-  ArrayList<Particle> otherBirds;
+  ArrayList<ConsciousEntity> otherBirds;
   Bird leader;
 
   // for dramatic entrance
   boolean hasEnteredScreen = false;
  
-  public Bird(float mass, PVector pos, ArrayList<Particle> otherBirds, color col, boolean isLeader) {
+  public Bird(float mass, PVector pos, ArrayList<ConsciousEntity> otherBirds, color col, boolean isLeader) {
    super(mass, pos, otherBirds);
-
-   // this.mass = mass;
-   // pos = new PVector(x, y);
-   // vel = PVector.fromAngle(3*PI/2);
-   // vel.mult(1);
-
 
    this.col = col;
 
@@ -33,11 +21,11 @@ class Bird extends Particle {
    this.isLeader = isLeader;
  }
 
-   public Bird(float mass, PVector pos, ArrayList<Particle> otherBirds, color col) {
+   public Bird(float mass, PVector pos, ArrayList<ConsciousEntity> otherBirds, color col) {
     this(mass, pos, otherBirds, col, false);
   }  
 
-  public Bird(PVector pos, ArrayList<Particle> otherBirds) {
+  public Bird(PVector pos, ArrayList<ConsciousEntity> otherBirds) {
    this(1, pos, otherBirds, black);
   }
 
@@ -51,10 +39,6 @@ class Bird extends Particle {
     //   } 
     // } 
 
-
-    // aimFor(target);
-
-
     avoidCollision();
     super.update();
     
@@ -64,24 +48,6 @@ class Bird extends Particle {
       checkIfOnscreen();
     }
   }
-
-  // // Change course as much as possible towards desired direction
-  // public void aimFor(PVector targetPos) {
-  //   PVector toTarget = PVector.sub(targetPos, pos);    
-  //   toTarget.normalize();
-  //   toTarget.mult(acceleratorMultiplier);
-  //   applyForce(toTarget);
-
-
-  //   // acc = toTarget;
-  //   // vel.add(acc);
-  //   // vel.limit(topSpeed);
-  // }
-
-  // // Update position from course and velocity
-  // private void updatePos() {
-  //   pos.add(vel);
-  // }
 
   private void repositionIfOutside() {
     if (pos.x > width) {

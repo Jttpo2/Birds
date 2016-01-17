@@ -1,7 +1,10 @@
-class Flock extends ParticleSystem {
+import java.util.Iterator;
+
+class Flock { // extends ParticleSystem {
+	private PVector origin;
 	private PVector target;
 	private color baseColor;
-	private ArrayList<Particle> birds;
+	private ArrayList<ConsciousEntity> birds;
 
 	private boolean followMouse;
 
@@ -11,8 +14,10 @@ class Flock extends ParticleSystem {
 	private final float STANDARD_MASS = 1;
 
 	public Flock(PVector origin, int size, int baseHue, boolean followMouse) {
-		super(origin);
-		birds = particles;
+		// super(origin);]
+		this.origin = origin;
+		// birds = particles;
+		birds = new ArrayList<ConsciousEntity>();
 		
 		this.followMouse = followMouse;
 		baseColor = color(random(baseHue-10, baseHue+10), 255, 255);
@@ -58,14 +63,15 @@ class Flock extends ParticleSystem {
 			// rect(x, y, 10, 10);
 		}
 
-		for (Particle b : birds) {
+		for (ConsciousEntity b : birds) {
 			PVector gravity = new PVector(0, G*b.mass); // Gravitational pull dependent on mass
 			b.drag(AIR);
 			b.applyForce(gravity);
 			b.aimFor(target);
 		}
 
-		super.run();
+		// super.run();
+		superrun();
 	}
 
 	public void setFollowMouse(boolean state) {
@@ -74,5 +80,43 @@ class Flock extends ParticleSystem {
 
 	public void toggleFollowMouse() {
 		setFollowMouse(!followMouse);
+	}
+
+	// *********** Should be in ParticleSystem ***********
+	// void addParticle() {
+	// 	particles.add(new Particle(STANDARD_MASS, origin, particles));
+	// }
+
+	// void addParticle(Particle p) {
+	// 	particles.add(p);
+	// }
+
+	// void removeParticle(Particle p) {
+	// 	particles.remove(p);
+	// }
+
+	void superrun() {
+		Iterator<ConsciousEntity> iter = birds.iterator();
+		while(iter.hasNext()) {
+			ConsciousEntity p = iter.next();
+			p.run();
+			if (p.isDead()) {
+				iter.remove();
+			}
+		}
+	}
+
+	void applyForce(PVector force) {
+		for (Particle p: birds) {
+			p.applyForce(force);
+			// TODO Apply gravitational force (gravity = new PVector(0,0.1); applyForce(gravity)) force in main
+		}
+	}
+
+	void applyRepeller(Repeller r) {
+		for (Particle p: birds) {
+			PVector force = r.repel(p);
+			p.applyForce(force);
+		}
 	}
 }
