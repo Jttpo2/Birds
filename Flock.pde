@@ -95,6 +95,7 @@ class Flock { // extends ParticleSystem {
 	// 	particles.remove(p);
 	// }
 
+	// ParticleSystem
 	void superrun() {
 		Iterator<ConsciousEntity> iter = birds.iterator();
 		while(iter.hasNext()) {
@@ -106,6 +107,7 @@ class Flock { // extends ParticleSystem {
 		}
 	}
 
+	// ParticleSystem
 	void applyForce(PVector force) {
 		for (Particle p: birds) {
 			p.applyForce(force);
@@ -113,9 +115,18 @@ class Flock { // extends ParticleSystem {
 		}
 	}
 
+	// ParticleSystem
 	void applyRepeller(Repeller r) {
 		for (Particle p: birds) {
 			PVector force = r.repel(p);
+			p.applyForce(force);
+		}
+	}
+
+	// ParticleSystem
+	void applyAttractor(Attractor a) {
+		for (Particle p: birds) {
+			PVector force = a.attract(p);
 			p.applyForce(force);
 		}
 	}

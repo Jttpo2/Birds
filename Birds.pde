@@ -1,7 +1,7 @@
 
 /* @pjs preload="london-skyline[marytaughtme.files.wordpress.com].jpg"; */ // Preloading file for web
 /*
-  Must design to work with attractor following mouse before Particle inheritance refactor.
+  -Must design to work with attractor following mouse before Particle inheritance refactor.
 
   Join flocks if in same area for enough time
   Fly away from chasing predator. Predator visible, larger, faster and eats birds, making them disappear.
@@ -12,11 +12,11 @@
   Stamina. Rest on structures when done. 
   Gamify somehow. Earn points. Fly as many birds through loops. Loops have to be passed on time. Birds disappear with time. Birds represent time. 
   Physics engine. Accelerating downwards and slowing going up.
-  Mass.
+  -Mass.
   Attractor and repeller.
   Wind. Gusts.
   Friction.
-  Air (fluid resistance).
+  -Air (fluid resistance).
 */
 
 private boolean createAllAtonce = false;
@@ -37,6 +37,7 @@ static float flyingDistance = BIRD_LENGTH*3;
 static final float G = 0.1;
 PVector wind = new PVector(0.2, 0);
 final Liquid AIR = new Liquid(0.005);
+Attractor attractor;
 
 static final int textSize = 10;
 
@@ -71,12 +72,15 @@ void setup() {
   } else {
     deployNewFlock();
   }
+
+   attractor = new Attractor(new PVector(width/2, height/2), 10000);
 }
 
 void draw() {
   if (isRunning) {
     background(white);
     image(bgImage, -3, height-bgImage.height);
+    attractor.display();
     showNumbers();
 
     if (!createAllAtonce) {
@@ -88,9 +92,10 @@ void draw() {
 
     for (Flock f: flocks) {
       // f.applyForce(wind);
-      
+      f.applyAttractor(attractor);
       f.run();
     }
+
   }
 }
 
