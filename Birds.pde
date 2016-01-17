@@ -26,7 +26,7 @@ private boolean followMouse = false;
 final int BIRD_AMOUNT = 600;
 final int FLOCK_AMOUNT = 1;
 
-static final int BIRD_LENGTH = 8;
+static final int BIRD_LENGTH = 5;
 static final int BIRD_WIDTH = BIRD_LENGTH/2+1;
 static final boolean FOLLOW_LEADER = false;
 static float topSpeed = 7;
@@ -35,8 +35,7 @@ static float avoidanceEagerness = 0.8; // low (-1) is nice for lots of small bir
 static float flyingDistance = BIRD_LENGTH*3;
 
 static final float G = 0.1;
-PVector gravity = new PVector(0, 0.1);
-PVector wind = new PVector(0.1, 0);
+PVector wind = new PVector(0.2, 0);
 
 static final int textSize = 10;
 
@@ -88,7 +87,7 @@ void draw() {
 
     for (Flock f: flocks) {
       // f.applyForce(wind);
-      // f.applyForce(gravity);
+      
       f.run();
     }
   }
