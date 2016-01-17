@@ -90,10 +90,10 @@ void draw() {
     for (Flock f: flocks) {
       // f.applyForce(wind);
       // f.applyForce(gravity);
-      // f.run();
+      f.run();
 
-      f.update();
-      f.display();
+      // f.update();
+      // f.display();
     }
   }
 }
@@ -170,8 +170,10 @@ private void showNumbers() {
 }
 
 private void deployNewFlock() {
+  // PVector pos = new PVector(random(0, width), height);
+  PVector pos = new PVector(100, 100);
   if (flocks.size() < FLOCK_AMOUNT && flocks.size() <= hues.length) {
-    flocks.add(new Flock(BIRD_AMOUNT/FLOCK_AMOUNT, hues[flocks.size()], followMouse));
+    flocks.add(new Flock(pos, BIRD_AMOUNT/FLOCK_AMOUNT, hues[flocks.size()], followMouse));
     lastCreationTime = millis();
   }
 }

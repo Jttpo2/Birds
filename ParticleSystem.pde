@@ -6,13 +6,21 @@ class ParticleSystem {
 
 	private static final float STANDARD_MASS = 1;
 
-	ParticleSystem(PVector pos) {
-		origin = pos.copy();
+	ParticleSystem(PVector origin) {
+		this.origin = origin.copy();
 		particles = new ArrayList<Particle>();
 	}
 
 	void addParticle() {
-		particles.add(new Particle(STANDARD_MASS, origin));
+		particles.add(new Particle(STANDARD_MASS, origin, particles));
+	}
+
+	void addParticle(Particle p) {
+		particles.add(p);
+	}
+
+	void removeParticle(Particle p) {
+		particles.remove(p);
 	}
 
 	void run() {

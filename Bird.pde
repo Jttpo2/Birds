@@ -9,14 +9,14 @@ class Bird extends Particle {
   color col;
 
   boolean isLeader = false;
-  ArrayList<Bird> otherBirds;
+  ArrayList<Particle> otherBirds;
   Bird leader;
 
   // for dramatic entrance
   boolean hasEnteredScreen = false;
  
-  public Bird(float mass, float x, float y, ArrayList<Bird> otherBirds, color col, boolean isLeader) {
-   super(mass, new PVector(x, y));
+  public Bird(float mass, PVector pos, ArrayList<Particle> otherBirds, color col, boolean isLeader) {
+   super(mass, pos, otherBirds);
 
    // this.mass = mass;
    // pos = new PVector(x, y);
@@ -33,12 +33,12 @@ class Bird extends Particle {
    this.isLeader = isLeader;
  }
 
-   public Bird(float mass, float x, float y, ArrayList<Bird> otherBirds, color col) {
-    this(mass, x, y, otherBirds, col, false);
+   public Bird(float mass, PVector pos, ArrayList<Particle> otherBirds, color col) {
+    this(mass, pos, otherBirds, col, false);
   }  
 
-  public Bird(float x, float y, ArrayList<Bird> otherBirds) {
-   this(1, x, y, otherBirds, black);
+  public Bird(PVector pos, ArrayList<Particle> otherBirds) {
+   this(1, pos, otherBirds, black);
   }
 
   // public void update(PVector target) {  
@@ -65,18 +65,18 @@ class Bird extends Particle {
     }
   }
 
-  // Change course as much as possible towards desired direction
-  public void aimFor(PVector targetPos) {
-    PVector toTarget = PVector.sub(targetPos, pos);    
-    toTarget.normalize();
-    toTarget.mult(acceleratorMultiplier);
-    applyForce(toTarget);
+  // // Change course as much as possible towards desired direction
+  // public void aimFor(PVector targetPos) {
+  //   PVector toTarget = PVector.sub(targetPos, pos);    
+  //   toTarget.normalize();
+  //   toTarget.mult(acceleratorMultiplier);
+  //   applyForce(toTarget);
 
 
-    // acc = toTarget;
-    // vel.add(acc);
-    // vel.limit(topSpeed);
-  }
+  //   // acc = toTarget;
+  //   // vel.add(acc);
+  //   // vel.limit(topSpeed);
+  // }
 
   // // Update position from course and velocity
   // private void updatePos() {
@@ -109,80 +109,80 @@ class Bird extends Particle {
     // rect(pos.x, pos.y, 2, 2);
   }
 
-  private float getDirectionTo(Bird that) {
-    PVector between = PVector.sub(that.pos, this.pos);
-    float angleToBird = between.heading();
-    return angleToBird;
-  }
+  // private float getDirectionTo(Bird that) {
+  //   PVector between = PVector.sub(that.pos, this.pos);
+  //   float angleToBird = between.heading();
+  //   return angleToBird;
+  // }
 
-  private PVector getVectorTo(Bird that) {
-    return PVector.sub(that.pos, this.pos);
-  }
+  // private PVector getVectorTo(Bird that) {
+  //   return PVector.sub(that.pos, this.pos);
+  // }
 
-  private float getDistanceTo(Bird that) {
-    PVector between = PVector.sub(that.pos, this.pos);
-    return between.mag();
-  }
+  // private float getDistanceTo(Bird that) {
+  //   PVector between = PVector.sub(that.pos, this.pos);
+  //   return between.mag();
+  // }
 
-  private Bird findClosest() {
-    float distanceToClosest = Float.MAX_VALUE;
-    Bird closest = null;
-    for (Bird that: otherBirds) {
-      if (this != that) { // No point in comparing with oneself
-        float distance = getDistanceTo(that);
-        if (distance < distanceToClosest) {
-          distanceToClosest = distance;
-          closest = that;
-        }  
-      }
-    }
-    return closest;
-  }
+  // private Bird findClosest() {
+  //   float distanceToClosest = Float.MAX_VALUE;
+  //   Bird closest = null;
+  //   for (Particle that: otherBirds) {
+  //     if (this != that) { // No point in comparing with oneself
+  //       float distance = getDistanceTo(that);
+  //       if (distance < distanceToClosest) {
+  //         distanceToClosest = distance;
+  //         closest = that;
+  //       }  
+  //     }
+  //   }
+  //   return closest;
+  // }
 
-  private void avoidCollision() {
-    Bird closest = findClosest();
-    if (closest == null) {
-      return;
-    }
-    if (getDistanceTo(closest) <= flyingDistance) {
-      avoid(closest);  
-      // println("Avoiding");
-    }
-  }
+  // private void avoidCollision() {
+  //   Bird closest = findClosest();
+  //   if (closest == null) {
+  //     return;
+  //   }
+  //   if (getDistanceTo(closest) <= flyingDistance) {
+  //     avoid(closest);  
+  //     // println("Avoiding");
+  //   }
+  // }
 
-  private void avoid(Bird that) {
-    if (isHeadingFor(that)) {    
-      PVector toBird = PVector.sub(that.pos, this.pos);
-      toBird.normalize();
-      toBird.mult(-avoidanceEagerness);
-      vel.add(toBird);
-      vel.limit(topSpeed);
+  // private void avoid(Bird that) {
+  //   if (isHeadingFor(that)) {    
+  //     PVector toBird = PVector.sub(that.pos, this.pos);
+  //     toBird.normalize();
+  //     toBird.mult(-avoidanceEagerness);
+  //     vel.add(toBird);
+  //     vel.limit(topSpeed);
 
-      // float distance = toBird.mag();
-      // float newCourse = atan((flyingDistance+1)/ distance);
-      // PVector newC = PVector.fromAngle(newCourse);
-      // newC.normalize();
-      // newC.mult(1);
-      // vel.add(newC);
-    }
-  }
+  //     // float distance = toBird.mag();
+  //     // float newCourse = atan((flyingDistance+1)/ distance);
+  //     // PVector newC = PVector.fromAngle(newCourse);
+  //     // newC.normalize();
+  //     // newC.mult(1);
+  //     // vel.add(newC);
+  //   }
+  // }
 
-  private boolean isHeadingFor(Bird that) {
-    float delta = vel.heading() - getDirectionTo(that);
-    return abs(delta) < PI;
-  }
+  // private boolean isHeadingFor(Bird that) {
+  //   float delta = vel.heading() - getDirectionTo(that);
+  //   return abs(delta) < PI;
+  // }
 
-  private Bird getLeader() {
-    if (leader == null) {
-      for (Bird b: otherBirds) {
-       if (b.isLeader) {
-        leader = b;
-        break;
-       }
-     }  
-   }
-     return leader;
-  }
+  // private Bird getLeader() {
+  //   if (leader == null) {
+  //     for (Bird b: otherBirds) {
+  //      if (b.isLeader) {
+  //       leader = b;
+  //       break;
+  //      }
+  //    }  
+  //  }
+  //    return leader;
+  // }
 
   // For dramatic entrance
   private void checkIfOnscreen() {
