@@ -47,6 +47,8 @@ class Flock {
 	}
 
 	public void update() {
+		
+
 		if (followMouse) {
 			pos = new PVector(mouseX, mouseY);
 		} else {
@@ -63,8 +65,10 @@ class Flock {
 			// rectMode(CENTER);
 			// rect(x, y, 10, 10);
 		}
+		
 		for (Bird b : birds) {
-			b.update(pos);
+			b.aimFor(pos);
+			b.update();
 		}
 
 	}

@@ -15,6 +15,8 @@
   Mass.
   Attractor and repeller.
   Wind. Gusts.
+  Friction.
+  Air (fluid resistance).
 */
 
 private boolean createAllAtonce = false;
@@ -32,6 +34,7 @@ static float acceleratorMultiplier = topSpeed*0.07; // how fast bird changes cou
 static float avoidanceEagerness = 0.8; // low (-1) is nice for lots of small birds. 0.1 seems natural.
 static float flyingDistance = BIRD_LENGTH*3;
 
+static final float G = 0.1;
 PVector gravity = new PVector(0, 0.1);
 PVector wind = new PVector(0.1, 0);
 
@@ -85,6 +88,10 @@ void draw() {
     }
 
     for (Flock f: flocks) {
+      // f.applyForce(wind);
+      // f.applyForce(gravity);
+      // f.run();
+
       f.update();
       f.display();
     }

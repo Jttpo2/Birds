@@ -4,13 +4,15 @@ class ParticleSystem {
 	ArrayList<Particle> particles;
 	PVector origin;
 
+	private static final float STANDARD_MASS = 1;
+
 	ParticleSystem(PVector pos) {
 		origin = pos.copy();
 		particles = new ArrayList<Particle>();
 	}
 
 	void addParticle() {
-		particles.add(new Particle(origin));
+		particles.add(new Particle(STANDARD_MASS, origin));
 	}
 
 	void run() {

@@ -3,22 +3,21 @@ class Particle {
 	PVector vel;
 	PVector acc;
 	
-	color col;
 	int radius;
 	float mass;
 	// float lifeSpan;
 
-	Particle(PVector pos) {
+	Particle(float mass, PVector pos) {
 		this.pos = pos.copy();
 		vel = new PVector();
 		acc = new PVector(0,0);
-		col = color(0);
 		radius = 5;
-		mass = 1;
+		this.mass = mass;
 		// lifespan = 255.0;
 	}
 
 	void update() {
+		vel.limit(topSpeed);
 		vel.add(acc);
 		pos.add(vel);
 		acc.mult(0); // clear acceleration
@@ -28,7 +27,7 @@ class Particle {
 	void display() {
 		noStroke();
 		// fill(col, lifespan);
-		fill(col);
+		fill(0);
 		ellipseMode(CENTER);
 		ellipse(pos.x, pos.y, radius, radius);
 

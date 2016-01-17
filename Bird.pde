@@ -1,9 +1,9 @@
-class Bird {
-  float mass;
+class Bird extends Particle {
+  // float mass;
 
-  PVector pos;
-  PVector vel;
-  PVector acc;
+  // PVector pos;
+  // PVector vel;
+  // PVector acc;
 
   PShape tri;
   color col;
@@ -16,10 +16,12 @@ class Bird {
   boolean hasEnteredScreen = false;
  
   public Bird(float mass, float x, float y, ArrayList<Bird> otherBirds, color col, boolean isLeader) {
-   this.mass = mass;
-   pos = new PVector(x, y);
-   vel = PVector.fromAngle(3*PI/2);
-   vel.mult(1);
+   super(mass, new PVector(x, y));
+
+   // this.mass = mass;
+   // pos = new PVector(x, y);
+   // vel = PVector.fromAngle(3*PI/2);
+   // vel.mult(1);
 
 
    this.col = col;
@@ -39,20 +41,23 @@ class Bird {
    this(1, x, y, otherBirds, black);
   }
 
-  public void update(PVector target) {  
+  // public void update(PVector target) {  
+  public void update() {  
     
-    if (FOLLOW_LEADER && !isLeader) {
-      Bird leader = getLeader();
-      if (leader != null) {
-        target = leader.pos;
-      } 
-    } 
+    // if (FOLLOW_LEADER && !isLeader) {
+    //   Bird leader = getLeader();
+    //   if (leader != null) {
+    //     target = leader.pos;
+    //   } 
+    // } 
 
-    aimFor(target);
+
+    // aimFor(target);
+
 
     avoidCollision();
-
-    updatePos();
+    super.update();
+    
     if (hasEnteredScreen) {
       repositionIfOutside();  
     } else {
@@ -61,20 +66,22 @@ class Bird {
   }
 
   // Change course as much as possible towards desired direction
-  private void aimFor(PVector targetPos) {
+  public void aimFor(PVector targetPos) {
     PVector toTarget = PVector.sub(targetPos, pos);    
     toTarget.normalize();
-    // toTarget.mult(-0.01);
     toTarget.mult(acceleratorMultiplier);
-    acc = toTarget;
-    vel.add(acc);
-    vel.limit(topSpeed);
+    applyForce(toTarget);
+
+
+    // acc = toTarget;
+    // vel.add(acc);
+    // vel.limit(topSpeed);
   }
 
-  // Update position from course and velocity
-  private void updatePos() {
-    pos.add(vel);
-  }
+  // // Update position from course and velocity
+  // private void updatePos() {
+  //   pos.add(vel);
+  // }
 
   private void repositionIfOutside() {
     if (pos.x > width) {
