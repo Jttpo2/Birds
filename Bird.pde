@@ -1,5 +1,6 @@
 class Bird {
-  
+  float mass;
+
   PVector pos;
   PVector vel;
   PVector acc;
@@ -14,7 +15,8 @@ class Bird {
   // for dramatic entrance
   boolean hasEnteredScreen = false;
  
-  public Bird(float x, float y, ArrayList<Bird> otherBirds, color col, boolean isLeader) {
+  public Bird(float mass, float x, float y, ArrayList<Bird> otherBirds, color col, boolean isLeader) {
+   this.mass = mass;
    pos = new PVector(x, y);
    vel = PVector.fromAngle(3*PI/2);
    vel.mult(1);
@@ -29,12 +31,12 @@ class Bird {
    this.isLeader = isLeader;
  }
 
-   public Bird(float x, float y, ArrayList<Bird> otherBirds, color col) {
-    this(x, y, otherBirds, col, false);
+   public Bird(float mass, float x, float y, ArrayList<Bird> otherBirds, color col) {
+    this(mass, x, y, otherBirds, col, false);
   }  
 
   public Bird(float x, float y, ArrayList<Bird> otherBirds) {
-   this(x, y, otherBirds, black, false);
+   this(1, x, y, otherBirds, black);
   }
 
   public void update(PVector target) {  
@@ -81,11 +83,11 @@ class Bird {
       pos.x = width;
     }
     // Do not overlap vertically
-    if (pos.y > height) {
-      pos.y = 0;
-    } else if (pos.y < 0) {
-      pos.y = height;
-    }
+    // if (pos.y > height) {
+    //   pos.y = 0;
+    // } else if (pos.y < 0) {
+    //   pos.y = height;
+    // }
   }
 
   public void display() {

@@ -40,8 +40,9 @@ class Particle {
 	}
 
 	void applyForce(PVector force) {
-		PVector f = force.copy();
-		f.div(mass);
+		// PVector f = force.copy();
+		// f.div(mass);
+		PVector f = PVector.div(force, mass);
 		acc.add(force);
 	}
 

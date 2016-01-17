@@ -8,6 +8,8 @@ class Flock {
 	private float xNoiseOffset = random(0, 10000);
 	private float yNoiseOffset = random(0, 10000);
 
+	private final float STANDARD_MASS = 1;
+
 	public Flock(int size, int baseHue, boolean followMouse) {
 		birds = new ArrayList<Bird>();
 		Bird bird;
@@ -26,7 +28,7 @@ class Flock {
 		// First dash of birds
 		for (int i=0; i<size; i++) {
 			// bird = new Bird(random(width/3, width/2*3), random(height/3, height/2*3), birds, baseColor);
-			bird = new Bird(pos.x, pos.y, birds, baseColor);
+			bird = new Bird(STANDARD_MASS, pos.x, pos.y, birds, baseColor);
 			birds.add(bird);  
 		}
 

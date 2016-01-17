@@ -1,6 +1,8 @@
 
 /* @pjs preload="london-skyline[marytaughtme.files.wordpress.com].jpg"; */ // Preloading file for web
 /*
+  Must design to work with attractor following mouse before Particle inheritance refactor.
+
   Join flocks if in same area for enough time
   Fly away from chasing predator. Predator visible, larger, faster and eats birds, making them disappear.
   Reproduction algorithm spawning birds as they are eaten. 
@@ -12,6 +14,7 @@
   Physics engine. Accelerating downwards and slowing going up.
   Mass.
   Attractor and repeller.
+  Wind. Gusts.
 */
 
 private boolean createAllAtonce = false;
@@ -19,7 +22,7 @@ private boolean isRunning = true;
 private boolean followMouse = false;
 
 final int BIRD_AMOUNT = 600;
-final int FLOCK_AMOUNT = 2;
+final int FLOCK_AMOUNT = 1;
 
 static final int BIRD_LENGTH = 8;
 static final int BIRD_WIDTH = BIRD_LENGTH/2+1;
@@ -28,6 +31,9 @@ static float topSpeed = 7;
 static float acceleratorMultiplier = topSpeed*0.07; // how fast bird changes course towards mouse pointer. Low (0.01) looks like bees. 0.04 kind of like starlings
 static float avoidanceEagerness = 0.8; // low (-1) is nice for lots of small birds. 0.1 seems natural.
 static float flyingDistance = BIRD_LENGTH*3;
+
+PVector gravity = new PVector(0, 0.1);
+PVector wind = new PVector(0.1, 0);
 
 static final int textSize = 10;
 
