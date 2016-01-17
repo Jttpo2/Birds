@@ -2,7 +2,7 @@ class Bird extends ConsciousEntity {
   PShape tri;
   color col;
 
-  ArrayList<ConsciousEntity> otherBirds;
+  // ArrayList<ConsciousEntity> otherBirds;
  
   public Bird(float mass, PVector pos, ArrayList<ConsciousEntity> otherBirds, color col) {
    super(mass, pos, otherBirds);
@@ -12,13 +12,14 @@ class Bird extends ConsciousEntity {
    tri = createTriangle();
    tri.translate(pos.x, pos.y);
 
-   this.otherBirds = otherBirds;
+   // this.otherBirds = otherBirds;
  }
 
   public Bird(PVector pos, ArrayList<ConsciousEntity> otherBirds) {
    this(1, pos, otherBirds, black);
   }
 
+  @Override
   public void display() {
     pushMatrix();
     tri.resetMatrix();

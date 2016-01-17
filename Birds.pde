@@ -53,6 +53,8 @@ long lastCreationTime = millis();
 
 PImage bgImage;
 
+Ejaculation murder;
+
 void setup() {
   fullScreen(P2D);
   // size(925, 750, P2D);  
@@ -63,6 +65,8 @@ void setup() {
   bgImage = loadImage("london-skyline[marytaughtme.files.wordpress.com].jpg");
   bgImage.resize(width+3,0);
   textSize(textSize);
+
+  murder = new Ejaculation(new PVector(width/2, height/2), 1, true);
 
   flocks = new ArrayList<Flock>();
   if (createAllAtonce) {
@@ -96,6 +100,7 @@ void draw() {
       f.run();
     }
 
+    murder.run();
   }
 }
 
