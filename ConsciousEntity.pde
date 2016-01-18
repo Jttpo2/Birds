@@ -41,12 +41,12 @@ class ConsciousEntity extends Particle {
   }
 
   // Change course as much as possible towards desired direction
-  public void aimFor(PVector targetPos) {
-    PVector toTarget = PVector.sub(targetPos, pos);    
-    toTarget.normalize();
-    toTarget.mult(acceleratorMultiplier);
-    applyForce(toTarget);
-  }
+  // public void aimFor(PVector targetPos) {
+  //   PVector toTarget = PVector.sub(targetPos, pos);    
+  //   toTarget.normalize();
+  //   toTarget.mult(acceleratorMultiplier);
+  //   applyForce(toTarget);
+  // }
 
   private void avoid(ConsciousEntity that) {
     if (isHeadingFor(that)) {    
