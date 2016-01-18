@@ -24,7 +24,7 @@ private boolean isRunning = true;
 private boolean followMouse = false;
 
 final int BIRD_AMOUNT = 600;
-final int FLOCK_AMOUNT = 0;
+final int FLOCK_AMOUNT = 2;
 
 static final int BIRD_LENGTH = 5;
 static final int BIRD_WIDTH = BIRD_LENGTH/2+1;
@@ -66,7 +66,7 @@ void setup() {
   bgImage.resize(width+3,0);
   textSize(textSize);
 
-  murder = new Ejaculation(new PVector(width/2, height/2), 100, true);
+  // murder = new Ejaculation(new PVector(width/2, height/2), 100, true);
 
   flocks = new ArrayList<Flock>();
   if (createAllAtonce) {
@@ -77,7 +77,7 @@ void setup() {
     deployNewFlock();
   }
 
-   attractor = new Attractor(new PVector(width/2, height/2), 10000);
+   attractor = new Attractor(new PVector(9*width/10, 1*height/10), 10000);
 }
 
 void draw() {
@@ -100,7 +100,7 @@ void draw() {
       f.run();
     }
 
-    murder.run();
+    // murder.run();
   }
 }
 
