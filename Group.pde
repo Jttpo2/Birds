@@ -1,8 +1,7 @@
-abstract class Group extends ParticleSystem {
-	// PVector origin;
+abstract class Group {
+	PVector origin;
 	private PVector target;
-	// ArrayList<ConsciousEntity> entities;
-	// ArrayList<ConsciousEntity> entities;
+	ArrayList<ConsciousEntity> entities;
 
 	private boolean followMouse;
 
@@ -10,10 +9,9 @@ abstract class Group extends ParticleSystem {
 	private float yNoiseOffset = random(0, 10000);
 
 	Group(PVector origin, int size, boolean followMouse) {
-		super(origin, size, followMouse);
-		// this.origin = origin;
-		// entities = new ArrayList<ConsciousEntity>();
-		entities = particels;
+		// super(origin, size, followMouse);
+		this.origin = origin;
+		entities = new ArrayList<ConsciousEntity>();
 
 		this.followMouse = followMouse;
 
@@ -41,10 +39,8 @@ abstract class Group extends ParticleSystem {
 			// rect(x, y, 10, 10);
 		}
 
-		for (Particle e : entities) {
-			// e.aimFor(target);
-			PVector toTarget = getAimVector(e, target);
-			e.applyForce(toTarget);
+		for (ConsciousEntity e : entities) {
+			e.aimFor(target);
 		}
 
 		// super.run();
@@ -67,55 +63,47 @@ abstract class Group extends ParticleSystem {
 		return entities.size();
 	}
 
-	// Change course as much as possible towards desired direction
-	private PVector getAimVector(Particle p, PVector target) {
-		PVector toTarget = PVector.sub(target, p.pos);    
-	    toTarget.normalize();
-	    toTarget.mult(acceleratorMultiplier);
-	    
+	// ****************************************
+	// Should be in ParticleSystem superclass
+	void superrun() {
+		for (Particle e: entities) {
+			e.drag(AIR);
+			PVector gravity = new PVector(0, G*e.mass); // Gravitational pull dependent on mass
+			e.applyForce(gravity);
+			e.run();
+		}
+
+		// Iterator<Particle> iter = birds.iterator();
+		// while(iter.hasNext()) {
+		// 	Particle p = iter.next();
+		// 	p.run();
+		// 	if (p.isDead()) {
+		// 		iter.remove();
+		// 	}
+		// }
 	}
 
-	// ****************************************
-	// // Should be in ParticleSystem superclass
-	// void superrun() {
-	// 	for (Particle e: entities) {
-	// 		e.drag(AIR);
-	// 		PVector gravity = new PVector(0, G*e.mass); // Gravitational pull dependent on mass
-	// 		e.applyForce(gravity);
-	// 		e.run();
-	// 	}
+	// Should be in ParticleSystem superclass
+	void applyForce(PVector force) {
+		for (Particle e: entities) {
+			e.applyForce(force);
+		}
+	}
 
-	// 	// Iterator<Particle> iter = birds.iterator();
-	// 	// while(iter.hasNext()) {
-	// 	// 	Particle p = iter.next();
-	// 	// 	p.run();
-	// 	// 	if (p.isDead()) {
-	// 	// 		iter.remove();
-	// 	// 	}
-	// 	// }
-	// }
+	// Should be in ParticleSystem superclass
+	void applyRepeller(Repeller r) {
+		for (Particle e: entities) {
+			PVector force = r.repel(e);
+			e.applyForce(force);
+		}
+	}
 
-	// // Should be in ParticleSystem superclass
-	// void applyForce(PVector force) {
-	// 	for (Particle e: entities) {
-	// 		e.applyForce(force);
-	// 	}
-	// }
-
-	// // Should be in ParticleSystem superclass
-	// void applyRepeller(Repeller r) {
-	// 	for (Particle e: entities) {
-	// 		PVector force = r.repel(e);
-	// 		e.applyForce(force);
-	// 	}
-	// }
-
-	// // Should be in ParticleSystem superclass
-	// void applyAttractor(Attractor a) {
-	// 	for (Particle e: entities) {
-	// 		PVector force = a.attract(e);
-	// 		e.applyForce(force);
-	// 	}
-	// }
+	// Should be in ParticleSystem superclass
+	void applyAttractor(Attractor a) {
+		for (Particle e: entities) {
+			PVector force = a.attract(e);
+			e.applyForce(force);
+		}
+	}
 
 }

@@ -23,6 +23,6 @@ class Flock extends Group { // extends ParticleSystem {
 	}
 
 	public void addBird() {
-		super.addEntity(new Bird(STANDARD_BIRD_MASS, origin, particles, baseColor));  
+		super.addEntity(new Bird(STANDARD_BIRD_MASS, origin, entities, baseColor));  
 	}
 }
