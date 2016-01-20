@@ -1,5 +1,3 @@
-import java.util.Iterator;
-
 class Flock extends Group { // extends ParticleSystem {
 	private static final float STANDARD_BIRD_MASS =1;
 	private color baseColor;
@@ -14,13 +12,13 @@ class Flock extends Group { // extends ParticleSystem {
 		}
 	}
 
-	public Flock(PVector origin, int size, color col) {
-		this(origin, size, col, false);
-	}
+	// public Flock(PVector origin, int size, color col) {
+	// 	this(origin, size, col, false);
+	// }
 
-	public Flock(PVector origin, int size) {
-		this(origin, size, black);
-	}
+	// public Flock(PVector origin, int size) {
+	// 	this(origin, size, black);
+	// }
 
 	public void addBird() {
 		super.addEntity(new Bird(STANDARD_BIRD_MASS, origin, entities, baseColor));  

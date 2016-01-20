@@ -72,15 +72,6 @@ abstract class Group {
 			e.applyForce(gravity);
 			e.run();
 		}
-
-		// Iterator<Particle> iter = birds.iterator();
-		// while(iter.hasNext()) {
-		// 	Particle p = iter.next();
-		// 	p.run();
-		// 	if (p.isDead()) {
-		// 		iter.remove();
-		// 	}
-		// }
 	}
 
 	// Should be in ParticleSystem superclass

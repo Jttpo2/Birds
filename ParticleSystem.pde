@@ -1,5 +1,3 @@
-// import java.util.Iterator;
-
 class ParticleSystem {
 	ArrayList<Particle> particles;
 	PVector origin;
@@ -11,9 +9,9 @@ class ParticleSystem {
 		particles = new ArrayList<Particle>();
 	}
 
-	void addParticle() {
-		particles.add(new Particle(STANDARD_MASS, origin));
-	}
+	// void addParticle() { // Processing.js has issues with different lengths of parameter lists for same function
+	// 	particles.add(new Particle(STANDARD_MASS, origin));
+	// }
 
 	void addParticle(Particle p) {
 		particles.add(p);
@@ -30,14 +28,6 @@ class ParticleSystem {
 			p.applyForce(gravity);
 			p.run();
 		}
-		// Iterator<Particle> iter = particles.iterator();
-		// while(iter.hasNext()) {
-		// 	Particle p = iter.next();
-		// 	p.run();
-		// 	if (p.isDead()) {
-		// 		iter.remove();
-		// 	}
-		// }
 	}
 
 	void applyForce(PVector force) {
