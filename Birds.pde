@@ -104,8 +104,8 @@ void draw() {
   }
 }
 
-private double roundOff(double value) {
-  return (double)Math.round(value * 100d) / 100d;
+private float roundOff(float value) {
+  return (float)Math.round(value * 100f) / 100f;
 }
 
 void mousePressed() {
