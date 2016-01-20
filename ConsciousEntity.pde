@@ -16,7 +16,7 @@ class ConsciousEntity extends Particle {
   }
 
 	private ConsciousEntity findClosest() {
-    float distanceToClosest = Float.MAX_VALUE;
+    float distanceToClosest = 1000000; // Float.MAX_VALUE; Does not exist in processing.js
     ConsciousEntity closest = null;
     for (ConsciousEntity that: otherEntities) {
       if (this != that) { // No point in comparing with oneself

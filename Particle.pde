@@ -11,7 +11,7 @@ class Particle {
   	boolean hasEnteredScreen = false;
 
 	Particle(float mass, PVector pos) {
-		this.pos = pos.copy();
+		this.pos = pos.get();
 		vel = new PVector();
 		acc = new PVector(0,0);
 		radius = 5;
@@ -54,7 +54,8 @@ class Particle {
 	void drag(Liquid l) {
 	    float speed = vel.mag(); // Speed of object
 	    float a = 1; // Frontal area of object
-	    PVector drag = vel.copy().normalize(); // Velocity unit vector
+	    PVector drag = vel.get(); // Velocity unit vector
+	    drag.normalize();
 
 	    float dragMagnitude = l.c * a * speed * speed;
 	    drag.mult(-1);

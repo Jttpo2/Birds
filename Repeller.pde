@@ -8,7 +8,7 @@ class Repeller {
 
 
 	Repeller(PVector pos) {
-		this.pos = pos.copy();
+		this.pos = pos.get();
 		radius = 5;
 		strength = 100;
 	}

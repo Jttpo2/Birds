@@ -5,7 +5,7 @@ class ParticleSystem {
 	private static final float STANDARD_MASS = 1;
 
 	ParticleSystem(PVector origin) {
-		this.origin = origin.copy();
+		this.origin = origin.get();
 		particles = new ArrayList<Particle>();
 	}
 
