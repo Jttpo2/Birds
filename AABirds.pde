@@ -21,9 +21,9 @@
 
 private boolean createAllAtonce = false;
 private boolean isRunning = true;
-private boolean followMouse = false;  
+private boolean followMouse = false;
 
-final int BIRD_AMOUNT = 200;
+final int BIRD_AMOUNT = 30;
 final int FLOCK_AMOUNT = 2;
 
 static final int BIRD_LENGTH = 5;
@@ -86,7 +86,8 @@ void draw() {
     image(bgImage, -3, height-bgImage.height);
     attractor.display();
     showNumbers();
-
+    text(mouseX, 50, 50 );
+    text(mouseY, 100, 50 );
     if (!createAllAtonce) {
       if (lastCreationTime + CREATION_INTERVAL < millis()) {
         deployNewFlock();
