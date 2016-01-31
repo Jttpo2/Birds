@@ -5,9 +5,10 @@
 // 	int length;
 
 // 	Tail(int length) {
-// 		this.length = length;
+// 		this.length = length;   
+
 // 		PShape line = createShape(LINE, 0, 0, length, 0);
 // 	}
 
 
-// }
+// }  

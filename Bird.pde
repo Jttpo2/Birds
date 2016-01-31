@@ -10,7 +10,6 @@ class Bird extends ConsciousEntity {
    createTriangle();
  }
 
-  @Override
   public void display() {
     pushMatrix();
     translate(pos.x, pos.y);
@@ -33,5 +32,5 @@ class Bird extends ConsciousEntity {
     vertices[0] = new PVector(BIRD_LENGTH/2, 0);
     vertices[1] = new PVector(-BIRD_LENGTH/2, -BIRD_WIDTH/2);
     vertices[2] = new PVector(-BIRD_LENGTH/2, BIRD_WIDTH/2);
-  }
-}
+  } 
+} 

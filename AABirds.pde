@@ -21,9 +21,9 @@
 
 private boolean createAllAtonce = false;
 private boolean isRunning = true;
-private boolean followMouse = false;
+private boolean followMouse = false;  
 
-final int BIRD_AMOUNT = 600;
+final int BIRD_AMOUNT = 200;
 final int FLOCK_AMOUNT = 2;
 
 static final int BIRD_LENGTH = 5;
@@ -39,7 +39,7 @@ PVector wind = new PVector(0.2, 0);
 final Liquid AIR = new Liquid(0.005);
 Attractor attractor;
 
-static final int textSize = 10;
+static final int sizeOfText = 10;
 
 ArrayList<Flock> flocks;
 
@@ -56,15 +56,15 @@ PImage bgImage;
 Ejaculation murder;
 
 void setup() {
-  fullScreen(P2D);
-  // size(925, 750, P2D);  
+  // fullScreen(P2D);
+  size(925, 750, P2D);  
   //frameRate(1);
   frameRate(40);
   colorMode(HSB, 255, 255, 255);
 
   bgImage = loadImage("london-skyline[marytaughtme.files.wordpress.com].jpg");
   bgImage.resize(width+3,0);
-  textSize(textSize);
+  textSize(sizeOfText);
 
   // murder = new Ejaculation(new PVector(width/2, height/2), 100, true);
 
@@ -77,7 +77,7 @@ void setup() {
     deployNewFlock();
   }
 
-   attractor = new Attractor(new PVector(9*width/10, 1*height/10), 10000);
+   attractor = new Attractor(new PVector((int)(9*width/10), (int)(1*height/10)), 10000);
 }
 
 void draw() {
@@ -168,11 +168,11 @@ void keyPressed() {
 private void showNumbers() {
   fill(grey);
   int initDistance = (int)(width/2.65);
-  text("Speed: " + topSpeed, initDistance, height-textSize);
-  text("DirChange: " + roundOff(acceleratorMultiplier), initDistance+75, height-textSize);
-  text("Avoidance: " + roundOff(avoidanceEagerness), initDistance+160, height-textSize);
-  text("Distance: " + roundOff(flyingDistance), initDistance+250, height-textSize);
-  text(int(frameRate) + " fps", width-50, height-textSize); 
+  text("Speed: " + topSpeed, initDistance, height-sizeOfText);
+  text("DirChange: " + roundOff(acceleratorMultiplier), initDistance+75, height-sizeOfText);
+  text("Avoidance: " + roundOff(avoidanceEagerness), initDistance+160, height-sizeOfText);
+  text("Distance: " + roundOff(flyingDistance), initDistance+250, height-sizeOfText);
+  text(int(frameRate) + " fps", width-50, height-sizeOfText); 
 }
 
 private void deployNewFlock() {

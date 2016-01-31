@@ -25,7 +25,6 @@ class Spermatozoon extends ConsciousEntity {
    		sperm.addChild(tail);
    	}
 
-   	@Override
    	public void display() {
    		pushMatrix();
 	    sperm.resetMatrix();
@@ -87,3 +86,4 @@ class Spermatozoon extends ConsciousEntity {
 	}
 
 	}
+	
