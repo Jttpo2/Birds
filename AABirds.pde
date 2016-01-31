@@ -24,7 +24,7 @@ private boolean isRunning = true;
 private boolean followMouse = false;
 
 final int BIRD_AMOUNT = 30;
-final int FLOCK_AMOUNT = 2;
+final int FLOCK_AMOUNT = 1;
 
 static final int BIRD_LENGTH = 5;
 static final int BIRD_WIDTH = BIRD_LENGTH/2+1;
@@ -59,7 +59,7 @@ void setup() {
   // fullScreen(P2D);
   size(925, 750, P2D);  
   //frameRate(1);
-  frameRate(40);
+  frameRate(60);
   colorMode(HSB, 255, 255, 255);
 
   bgImage = loadImage("london-skyline[marytaughtme.files.wordpress.com].jpg");

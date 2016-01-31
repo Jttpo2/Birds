@@ -17,36 +17,39 @@ abstract class Group {
 
 		// Perlin noise config.
 		int octaves = 2;
-		float falloff = 0.9;
+		float falloff = 1.5;
 		noiseDetail(octaves, falloff);
 	}
 
 	void run() {
-		if (followMouse) { // && !isMouseIdle()) {
-			target = new PVector(mouseX, mouseY);
-		} else {
-			float noiseX = noise(xNoiseOffset);
-			float noiseY = noise(yNoiseOffset);
-			// int x = (int) map(noiseX, 0, 1, 0, width);
-			// int y = (int) map(noiseY, 0, 1, 0, height);
-			int x = (int) map(noiseX, 0, 1, 0, width/2); // .js canvas has different notion about size
-      		int y = (int) map(noiseY, 0, 1, 0, height/2);// .js canvas has different notion about size
-			target = new PVector(x, y);
+		if (frameCount % 2 == 0) {
+			if (followMouse) { // && !isMouseIdle()) {
+				target = new PVector(mouseX, mouseY);
+			} else {
+				float noiseX = noise(xNoiseOffset);
+				float noiseY = noise(yNoiseOffset);
+				int x = (int) map(noiseX, 1.1, 2, 0, width/2);
+				int y = (int) map(noiseY, 1.1, 2, 0, height/2);
+				// int x = (int) map(noiseX, 0, 1, 0, width/2); // something weird with perlin noise in js
+	   //    		int y = (int) map(noiseY, 0, 1, 0, height/2);// something weird with perlin noise in js
+				target = new PVector(x, y);
 
-			xNoiseOffset += 0.01;
-			yNoiseOffset += 0.01;
-			
-			// fill(black);
-			// rectMode(CENTER);
-			// rect(x, y, 10, 10);
+				xNoiseOffset += 0.01;
+				yNoiseOffset += 0.01;
+				
+				fill(black);
+				rectMode(CENTER);
+				rect(x, y, 10, 10);
+			}
+
+			for (ConsciousEntity e : entities) {
+				e.aimFor(target);
+			}
+
 		}
-
-		for (ConsciousEntity e : entities) {
-			e.aimFor(target);
-		}
-
 		// super.run();
 		superrun();
+
 	}
 
 	void addEntity(ConsciousEntity e) {

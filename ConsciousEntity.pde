@@ -11,8 +11,16 @@ class ConsciousEntity extends Particle {
 	}
 
   void update() {
-    avoidCollision();
+    // Check for proximity every 3rd frame
+    if (frameCount % 3  == 0) {
+      think();  
+    }
+    
     super.update();
+  }
+
+  private void think() {
+    avoidCollision();
   }
 
 	private ConsciousEntity findClosest() {
