@@ -23,7 +23,7 @@ private boolean createAllAtonce = false;
 private boolean isRunning = true;
 private boolean followMouse = false;
 
-final int BIRD_AMOUNT = 30;
+final int BIRD_AMOUNT = 40;
 final int FLOCK_AMOUNT = 1;
 
 static final int BIRD_LENGTH = 5;

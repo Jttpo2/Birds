@@ -37,9 +37,10 @@ abstract class Group {
 				xNoiseOffset += 0.01;
 				yNoiseOffset += 0.01;
 				
-				fill(black);
-				rectMode(CENTER);
-				rect(x, y, 10, 10);
+				// Show where they're heading
+				// fill(black);
+				// rectMode(CENTER);
+				// rect(x, y, 10, 10);
 			}
 
 			for (ConsciousEntity e : entities) {
