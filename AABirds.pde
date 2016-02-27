@@ -23,14 +23,14 @@ private boolean createAllAtonce = false;
 private boolean isRunning = true;
 private boolean followMouse = false;
 
-final int BIRD_AMOUNT = 40;
+final int BIRD_AMOUNT = 10;
 final int FLOCK_AMOUNT = 1;
 
-static final int BIRD_LENGTH = 5;
+static final int BIRD_LENGTH = 10;
 static final int BIRD_WIDTH = BIRD_LENGTH/2+1;
 static final boolean FOLLOW_LEADER = false;
-static float topSpeed = 7;
-static float acceleratorMultiplier = topSpeed*0.07; // how fast bird changes course towards mouse pointer. Low (0.01) looks like bees. 0.04 kind of like starlings
+static float topSpeed = 8;
+static float acceleratorMultiplier = topSpeed*0.08; // how fast bird changes course towards mouse pointer. Low (0.01) looks like bees. 0.04 kind of like starlings
 static float avoidanceEagerness = 0.8; // low (-1) is nice for lots of small birds. 0.1 seems natural.
 static float flyingDistance = BIRD_LENGTH*3;
 
@@ -77,14 +77,14 @@ void setup() {
     deployNewFlock();
   }
 
-   attractor = new Attractor(new PVector((int)(9*width/10), (int)(1*height/10)), 10000);
+   // attractor = new Attractor(new PVector((int)(9*width/10), (int)(1*height/10)), 10000);
 }
 
 void draw() {
   if (isRunning) {
     background(white);
     image(bgImage, -3, height-bgImage.height);
-    attractor.display();
+    // attractor.display();
     showNumbers();
     text(mouseX, 50, 50 );
     text(mouseY, 100, 50 );
@@ -97,7 +97,7 @@ void draw() {
 
     for (Flock f: flocks) {
       // f.applyForce(wind);
-      f.applyAttractor(attractor);
+      // f.applyAttractor(attractor);
       f.run();
     }
 
@@ -177,7 +177,8 @@ private void showNumbers() {
 }
 
 private void deployNewFlock() {
-  PVector pos = new PVector(random(0, width), height);
+  // PVector pos = new PVector(random(0, width), height);
+  PVector pos = new PVector(width/2, height/2);
   if (flocks.size() < FLOCK_AMOUNT && flocks.size() <= hues.length) {
     flocks.add(new Flock(pos, BIRD_AMOUNT/FLOCK_AMOUNT, hues[flocks.size()], followMouse));
     lastCreationTime = millis();

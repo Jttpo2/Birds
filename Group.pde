@@ -8,6 +8,9 @@ abstract class Group {
 	private float xNoiseOffset = random(0, 10000);
 	private float yNoiseOffset = random(0, 10000);
 
+	boolean gravityEnabled = false;
+	boolean airResistanceEnabled = true;
+
 	Group(PVector origin, int size, boolean followMouse) {
 		// super(origin, size, followMouse);
 		this.origin = origin;
@@ -26,31 +29,35 @@ abstract class Group {
 			if (followMouse) { // && !isMouseIdle()) {
 				target = new PVector(mouseX, mouseY);
 			} else {
-				float noiseX = noise(xNoiseOffset);
-				float noiseY = noise(yNoiseOffset);
-				int x = (int) map(noiseX, 1.1, 2, 0, width/2);
-				int y = (int) map(noiseY, 1.1, 2, 0, height/2);
-				// int x = (int) map(noiseX, 0, 1, 0, width/2); // something weird with perlin noise in js
-	   //    		int y = (int) map(noiseY, 0, 1, 0, height/2);// something weird with perlin noise in js
-				target = new PVector(x, y);
-
-				xNoiseOffset += 0.01;
-				yNoiseOffset += 0.01;
-				
-				// Show where they're heading
-				// fill(black);
-				// rectMode(CENTER);
-				// rect(x, y, 10, 10);
+				target = getPerlinNoisePoint();
 			}
 
 			for (ConsciousEntity e : entities) {
-				e.aimFor(target);
+				e.aimFor(target); // Working at making them autonomous
 			}
 
 		}
 		// super.run();
 		superrun();
+	}
 
+	private PVector getPerlinNoisePoint() {
+		float noiseX = noise(xNoiseOffset);
+		float noiseY = noise(yNoiseOffset);
+		int x = (int) map(noiseX, 1.1, 2, 0, width/2);
+		int y = (int) map(noiseY, 1.1, 2, 0, height/2);
+		// int x = (int) map(noiseX, 0, 1, 0, width/2); // something weird with perlin noise in js
+		// int y = (int) map(noiseY, 0, 1, 0, height/2);// something weird with perlin noise in js
+
+		xNoiseOffset += 0.01;
+		yNoiseOffset += 0.01;
+		
+		// Show where they're heading
+		// fill(black);
+		// rectMode(CENTER);
+		// rect(x, y, 10, 10);
+		
+		return new PVector(x, y);
 	}
 
 	void addEntity(ConsciousEntity e) {
@@ -69,7 +76,6 @@ abstract class Group {
 		return entities.size();
 	}
 
-	
 	boolean isMouseWithinCanvas() {
 			return !(mouseX <= 0 || mouseX >= width || mouseY <= 0 || mouseY >= height);
 	}
@@ -96,9 +102,13 @@ abstract class Group {
 	// Should be in ParticleSystem superclass
 	void superrun() {
 		for (Particle e: entities) {
-			e.drag(AIR);
-			PVector gravity = new PVector(0, G*e.mass); // Gravitational pull dependent on mass
-			e.applyForce(gravity);
+			if (airResistanceEnabled) {
+				e.drag(AIR);
+			}
+			if (gravityEnabled) {
+				PVector gravity = new PVector(0, G*e.mass); // Gravitational pull dependent on mass
+				e.applyForce(gravity);
+			}
 			e.run();
 		}
 	}

@@ -7,12 +7,17 @@ class Particle {
 	float mass;
 	// float lifeSpan;
 
+	boolean overlapVertically = true;
+
 	// for dramatic entrance
   	boolean hasEnteredScreen = false;
 
 	Particle(float mass, PVector pos) {
 		this.pos = pos.get();
-		vel = new PVector();
+		
+		float randX = random(-1, 1);
+		float randY = random(-1, 1);
+		vel = new PVector(randX, randY);
 		acc = new PVector(0,0);
 		radius = 5;
 		this.mass = mass;
@@ -74,12 +79,14 @@ class Particle {
 	    } else if (pos.x < 0) {
 	      pos.x = width;
 	    }
-	    // Do not overlap vertically
-	    // if (pos.y > height) {
-	    //   pos.y = 0;
-	    // } else if (pos.y < 0) {
-	    //   pos.y = height;
-	    // }
+	    
+	    if (overlapVertically) {
+		    if (pos.y > height) {
+		      pos.y = 0;
+		    } else if (pos.y < 0) {
+		      pos.y = height;
+		    }
+	    }
 	  }
 	  
 	  // For dramatic entrance

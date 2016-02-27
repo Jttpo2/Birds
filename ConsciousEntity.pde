@@ -13,8 +13,13 @@ class ConsciousEntity extends Particle {
   void update() {
     // Check for proximity every 3rd frame
     if (frameCount % 3  == 0) {
-      think(otherEntities);  
+      // think(otherEntities);  
     }
+
+    PVector flockingVector = flock(otherEntities);
+    // acc.add(flockingVector);
+    aimFor(flockingVector);
+
 
     super.update();
   }
@@ -48,11 +53,23 @@ class ConsciousEntity extends Particle {
     }
   }
 
+  private final float MAX_SPEED_DISTANCE = 50;
+  private final float DAMPING = 100;
+  private final float MAX_FORCE = 2;
+
   // Change course as much as possible towards desired direction
   public void aimFor(PVector targetPos) {
     PVector toTarget = PVector.sub(targetPos, pos);    
     toTarget.normalize();
-    toTarget.mult(acceleratorMultiplier);
+    // toTarget.mult(acceleratorMultiplier);
+
+    float dist = toTarget.mag();
+    if (dist < MAX_SPEED_DISTANCE) {
+      toTarget.mult(topSpeed*(dist/DAMPING));
+    } else {
+      toTarget.mult(topSpeed);
+    }
+    toTarget.limit(MAX_FORCE);
     applyForce(toTarget);
   }
 
@@ -85,5 +102,43 @@ class ConsciousEntity extends Particle {
     float delta = vel.heading() - getDirectionTo(that);
     return abs(delta) < PI;
     // return getVectorTo(that).dot(vel) >= 0;
+  }
+
+
+  private final float SEPARATION_WEIGHT = 1;
+  private final float ALIGNMENT_WEIGHT = 1;
+  private final float COHESION_WEIGHT = 1;
+  private final float NEIGHBOUR_RADIUS = 200;
+
+  private PVector flock(ArrayList<ConsciousEntity> others) {
+    PVector separation = separate(others);
+    separation.mult(SEPARATION_WEIGHT);
+    PVector alignment = align(others);
+    alignment.mult(ALIGNMENT_WEIGHT);
+    PVector cohesion = cohere(others);
+    cohesion.mult(COHESION_WEIGHT);
+    
+    separation.add(alignment);
+    separation.add(cohesion);
+    // return separation;
+    return cohesion;
+  }
+
+  private PVector separate(ArrayList<ConsciousEntity> others) {
+    return new PVector();
+  }
+
+  private PVector align(ArrayList<ConsciousEntity> others) {
+    return new PVector();
+  }
+
+  private PVector cohere(ArrayList<ConsciousEntity> others) {
+    PVector sum = new PVector();
+    for (ConsciousEntity e: others) {
+      if (0 < getDistanceTo(e) && getDistanceTo(e) < NEIGHBOUR_RADIUS) {
+        sum.add(e.pos);
+      }
+    }
+    return sum;
   }
 }
