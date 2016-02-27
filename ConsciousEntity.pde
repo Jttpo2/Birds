@@ -1,29 +1,30 @@
 class ConsciousEntity extends Particle {
-	ArrayList<ConsciousEntity> otherEntities;
+	// ArrayList<ConsciousEntity> otherEntities;
 
-	ConsciousEntity(float mass, PVector pos, ArrayList<ConsciousEntity> otherEntities) {
+	ConsciousEntity(float mass, PVector pos) {
 	// ciousEntity(float mass, PVector pos) {
 		super(mass, pos);
-		this.otherEntities = otherEntities;
+		// this.otherEntities = otherEntities;
 		// if (otherEntities == null) {
 		// 	otherEntities = new ArrayList<ConsciousEntity>();
 		// }
 	}
 
-  void update() {
+  void update(ArrayList<ConsciousEntity> otherEntities) {
     // Check for proximity every 3rd frame
     if (frameCount % 3  == 0) {
-      think();  
+      think(otherEntities);  
     }
+    // println('g');
     
     super.update();
   }
 
-  private void think() {
-    avoidCollision();
+  private void think(ArrayList<ConsciousEntity> otherEntities) {
+    avoidCollision(otherEntities);
   }
 
-	private ConsciousEntity findClosest() {
+	private ConsciousEntity findClosest(ArrayList<ConsciousEntity> otherEntities) {
     float distanceToClosest = 1000000; // Float.MAX_VALUE; Does not exist in processing.js
     ConsciousEntity closest = null;
     for (ConsciousEntity that: otherEntities) {
@@ -38,8 +39,8 @@ class ConsciousEntity extends Particle {
     return closest;
   }
 
-  void avoidCollision() {
-    ConsciousEntity closest = findClosest();
+  void avoidCollision(ArrayList<ConsciousEntity> otherEntities) {
+    ConsciousEntity closest = findClosest(otherEntities);
     if (closest == null) {
       return;
     }

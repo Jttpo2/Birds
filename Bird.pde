@@ -3,8 +3,8 @@ class Bird extends ConsciousEntity {
 
   PVector[] vertices = new PVector[3];
  
-  public Bird(float mass, PVector pos, ArrayList<ConsciousEntity> otherBirds, color col) {
-   super(mass, pos, otherBirds);
+  public Bird(float mass, PVector pos, color col) {
+   super(mass, pos);
    this.col = col;
 
    createTriangle();

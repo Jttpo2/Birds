@@ -14,8 +14,8 @@ class Spermatozoon extends ConsciousEntity {
 	float startAngle = 0;
 	float angleVel = 0.3;
 
-	Spermatozoon(PVector pos, ArrayList<ConsciousEntity> others) {
-   		super(MASS, pos, others);
+	Spermatozoon(PVector pos) {
+   		super(MASS, pos);
    		
    		body = createBody();
    		tail = createTail();

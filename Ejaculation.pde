@@ -9,6 +9,6 @@ class Ejaculation extends Group {
 	}
 
 	public void addSpermatozoon() {
-		super.addEntity(new Spermatozoon(origin, entities));  
+		super.addEntity(new Spermatozoon(origin));  
 	}
 }
