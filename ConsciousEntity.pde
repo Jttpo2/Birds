@@ -55,7 +55,7 @@ class ConsciousEntity extends Particle {
 
   private final float MAX_SPEED_DISTANCE = 50;
   private final float DAMPING = 100;
-  private final float MAX_FORCE = 2;
+  private final float MAX_FORCE = 4;
 
   // Change course as much as possible towards desired direction
   public void aimFor(PVector targetPos) {
@@ -107,7 +107,7 @@ class ConsciousEntity extends Particle {
 
   private final float SEPARATION_WEIGHT = 1;
   private final float ALIGNMENT_WEIGHT = 1;
-  private final float COHESION_WEIGHT = 1;
+  private final float COHESION_WEIGHT = 0.5;
   private final float NEIGHBOUR_RADIUS = 200;
 
   private PVector flock(ArrayList<ConsciousEntity> others) {
@@ -118,8 +118,8 @@ class ConsciousEntity extends Particle {
     PVector cohesion = cohere(others);
     cohesion.mult(COHESION_WEIGHT);
     
-    separation.add(alignment);
-    separation.add(cohesion);
+    cohesion.add(alignment);
+    // separation.add(cohesion);
     // return separation;
     return cohesion;
   }
@@ -129,7 +129,15 @@ class ConsciousEntity extends Particle {
   }
 
   private PVector align(ArrayList<ConsciousEntity> others) {
-    return new PVector();
+    PVector mean = new PVector();
+    for (ConsciousEntity e: others) {
+      if (0 < getDistanceTo(e) && getDistanceTo(e) < NEIGHBOUR_RADIUS) {
+        mean.add(e.vel);
+      }
+    }
+    mean.limit(MAX_FORCE);
+
+    return mean;
   }
 
   private PVector cohere(ArrayList<ConsciousEntity> others) {
