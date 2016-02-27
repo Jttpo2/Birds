@@ -119,13 +119,29 @@ class ConsciousEntity extends Particle {
     cohesion.mult(COHESION_WEIGHT);
     
     cohesion.add(alignment);
+    cohesion.add(separation);
     // separation.add(cohesion);
     // return separation;
     return cohesion;
   }
 
   private PVector separate(ArrayList<ConsciousEntity> others) {
-    return new PVector();
+    PVector mean = new PVector();
+    for (ConsciousEntity e: others) {
+      float dist = getDistanceTo(e);
+      if (0 <  dist && dist < flyingDistance) {
+        PVector toEntity = PVector.sub(this.pos, e.pos);
+        // toEntity.normalize();
+        // toEntity.div(dist);
+        // toEntity.mult(-1);
+
+        mean.add(toEntity);
+      }
+    }
+    // mean.limit(MAX_FORCE);
+
+
+    return mean;
   }
 
   private PVector align(ArrayList<ConsciousEntity> others) {
